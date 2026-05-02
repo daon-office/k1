@@ -458,7 +458,7 @@
                     const {
                         $t: e
                     } = Object(a["getCurrentInstance"])().proxy;
-                    console.log("什么国际化612", e("FileManage.files"));
+                    console.log("internationalization 612", e("FileManage.files"));
                     const {
                         proxy: n
                     } = Object(a["getCurrentInstance"])(),
@@ -883,7 +883,7 @@
                                         }))),
                             t[n] = a
                         }),
-                        console.log("排除对象SVG功能期望的数据处理", JSON.stringify(t)),
+                        console.log("Excluded object SVG Excluded object data detected", JSON.stringify(t)),
                         this.parts = Object.freeze(t)
                     }
                 },
@@ -1066,7 +1066,7 @@
                 c = Object(a["ref"])(null);
                 Object(a["watch"])([() => t.objects, () => t.excluded_objects, () => t.model], () => {
                     t.model && ("K1 Max" === t.model ? (console.log("当前打印机型号", t.model), r.viewBoxInt = "-26 0 350 300", r.deviceStyle = !0) : (r.viewBoxInt = "0 0 300 290", r.deviceStyle = !1)),
-                    t.objects && t.objects.length > 0 && (r.excluded_data = JSON.parse(t.objects), console.log("排除对象数据监听到了阿", JSON.parse(t.objects)), V().partUpdate(r.excluded_data)),
+                    t.objects && t.objects.length > 0 && (r.excluded_data = JSON.parse(t.objects), console.log("Excluded object data listening was detected.", JSON.parse(t.objects)), V().partUpdate(r.excluded_data)),
                     t.excluded_objects && (r.lightObjects = JSON.parse(t.excluded_objects))
                 }, {
                     immediate: !0
@@ -1479,7 +1479,7 @@
         };
         n("2577");
         const ve = S()(we, [["__scopeId", "data-v-d06bcaee"]]);
-
+		
         // ── FilamentSetting Component ───────────────────────────────────
         const FilamentSettingDef = {
             __name: "FilamentSetting",
@@ -1495,15 +1495,29 @@
                     socket: null,
                     messageCenter: null
                 });
-
+				
                 // helper: convert "#rrggbb" -> bool whether text should be dark
                 const isDark = hex => {
-                    try {
-                        const c = hex.replace('#','').replace(/^0/, '');
-                        const r = parseInt(c.substr(0,2),16)||0, g = parseInt(c.substr(2,2),16)||0, b = parseInt(c.substr(4,2),16)||0;
-                        return (r*299 + g*587 + b*114) / 1000 > 128;
-                    } catch { return false; }
-                };
+					try {
+						const c = hex.replace('#','');
+
+						let r = parseInt(c.substr(0,2),16) / 255;
+						let g = parseInt(c.substr(2,2),16) / 255;
+						let b = parseInt(c.substr(4,2),16) / 255;
+
+						// 감마 보정
+						r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+						g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+						b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+
+						// 실제 밝기 (luminance)
+						const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+						return luminance < 0.5; // 어두우면 true
+					} catch {
+						return false;
+					}
+				};
 
                 const normalizeColor = hex => {
                     if (!hex) return '#888888';
@@ -1515,32 +1529,65 @@
                 };
 
                 const parseBoxsInfo = raw => {
-                    if (!raw) return null;
-                    if (typeof raw === 'string') { try { return JSON.parse(raw); } catch { return null; } }
-                    return raw;
-                };
+					if (!raw) return null;
+
+					if (typeof raw === 'string') {
+						try {
+							return JSON.parse(raw);
+						} catch (err) {
+							console.log('JSON parse 실패:', raw);
+							return null;
+						}
+					}
+
+					return raw; // 이미 object면 그대로
+				};
 
                 const onMessage = e => {
-                    if ('ok' === e) return;
-                    try {
-                        const d = JSON.parse(e);
-                        if (d.boxsInfo) fs.boxsInfo = parseBoxsInfo(d.boxsInfo);
-                    } catch {}
-                };
+					try {
+						const raw = typeof e === 'string' ? e : e.data;
+						if (raw === 'ok') return;
+
+						const d = JSON.parse(raw);
+						//console.log('return message = ', d);
+						if (d.boxsInfo) {
+							fs.boxsInfo = parseBoxsInfo(d.boxsInfo);
+							//console.log('fs.boxsInfo = ',fs.boxsInfo);
+						}
+					} catch (err) {
+						console.log('WS parse error', err);
+					}
+				};
 
                 Object(a["onMounted"])(() => {
-                    fs.socket = e.$webSocket;
-                    fs.messageCenter = e.$messageCenter;
-                    if (fs.messageCenter) fs.messageCenter.on('message_change', onMessage);
-                    // initial read from store
-                    const storeData = store;
-                    if (storeData.boxsInfo) fs.boxsInfo = parseBoxsInfo(storeData.boxsInfo);
-                });
+					const { proxy } = Object(a["getCurrentInstance"])();
 
-                Object(a["onUnmounted"])(() => {
-                    if (fs.messageCenter) fs.messageCenter.off('message_change', onMessage);
-                });
+					fs.socket = proxy.$webSocket;
+					fs.messageCenter = proxy.$messageCenter;
 
+					//  message 수신
+					if (fs.messageCenter) {
+						fs.messageCenter.on('message_change', onMessage);
+					}
+
+					//  polling 추가 (핵심)
+					fs.timer = setInterval(() => {
+						if (!fs.socket) return;
+
+						//console.log('📤 boxsInfo 요청');
+
+						fs.socket.sendMsg({
+							method: "get",
+							params: {
+								boxsInfo: 1
+							}
+						});
+
+					}, 3000);
+				});
+				
+				//console.log('fs.boxsInfo = ',fs.boxsInfo);
+                
                 // ── feed / retract ─────────────────────────────────────
                 const sendFeed = dir => {
                     if (!fs.selectedSlot || !fs.socket) return;
@@ -1568,10 +1615,13 @@
                     fs.selectedSlot && fs.selectedSlot.boxId === boxId && fs.selectedSlot.matId === matId;
 
                 const toggleFold = () => { fs.foldFlag = !fs.foldFlag; };
+				
+				//console.log('fs.boxsInfo = ',fs.boxsInfo);
+				//if (!fs.boxsInfo) return null;
 
                 // ── render ────────────────────────────────────────────
                 return (e2, t2) => {
-                    const h = Object(a["createElementVNode"]),
+                    const h = Object(a["createVNode"]),
                           cv = Object(a["createVNode"]),
                           ob = Object(a["openBlock"]),
                           ceb = Object(a["createElementBlock"]),
@@ -1582,25 +1632,54 @@
                           rb = Object(a["renderList"]),
                           fra = Object(a["Fragment"]);
 
-                    const boxes = (fs.boxsInfo && fs.boxsInfo.materialBoxs) ? fs.boxsInfo.materialBoxs : [];
+                    const boxes = fs.boxsInfo?.materialBoxs;
+					
+					
+					
                     const hasCFS = boxes.some(b => b.type === 0);
 
                     // Build UI nodes imperatively to stay compatible with minified Vue runtime
                     const spoolIcon = (color, small) => {
-                        const sz = small ? 52 : 60, cx = sz/2, r1 = sz/2-1, r2 = sz/2-2, r3 = sz/2-9;
-                        const c = normalizeColor(color);
-                        const dark = isDark(c);
-                        const lineColor = dark ? '#000' : '#FFF';
-                        return h('svg', { style: `width:${sz}px;height:${sz}px;` }, [
-                            h('circle', { cx, cy: cx, r: r1, class: 'box-circle', 'stroke-width': '2', fill: '#37373B', 'data-v-flt00001': '' }),
-                            h('circle', { cx, cy: cx, r: r2, stroke: '#949494', 'stroke-width': '0', fill: c, 'data-v-flt00001': '' }),
-                            h('circle', { cx, cy: cx, r: r3, fill: '#37373B', 'data-v-flt00001': '' }),
-                            h('line', { x1: cx, y1: 4, x2: cx, y2: cx-8, stroke: lineColor, 'stroke-width': '1', 'data-v-flt00001': '' }),
-                            h('line', { x1: cx, y1: sz-4, x2: cx, y2: cx+8, stroke: lineColor, 'stroke-width': '1', 'data-v-flt00001': '' }),
-                            h('line', { x1: 4, y1: cx, x2: cx-8, y2: cx, stroke: lineColor, 'stroke-width': '1', 'data-v-flt00001': '' }),
-                            h('line', { x1: sz-4, y1: cx, x2: cx+8, y2: cx, stroke: lineColor, 'stroke-width': '1', 'data-v-flt00001': '' }),
-                        ]);
-                    };
+						const sz = small ? 52 : 60;
+						const cx = sz / 2;
+
+						const r1 = sz / 2 - 1;   // 외곽
+						const r2 = sz / 2 - 3;   // 컬러
+						const r3 = sz / 2 - 22;  // 내경
+
+						const c = normalizeColor(color);
+						const dark = isDark(c);
+						
+						const lineColor = dark ? '#FFF' : '#000';
+
+						return h('svg', { style: `width:${sz}px;height:${sz}px;` }, [
+							// 외곽
+							h('circle', {
+								cx, cy: cx, r: r1,
+								class: 'box-circle',
+								'stroke-width': '10',
+								fill: '#37373B'
+							}),
+
+							// 컬러 영역
+							h('circle', {
+								cx, cy: cx, r: r2,
+								fill: c
+							}),
+
+							// 중앙 구멍 (작게!)
+							h('circle', {
+								cx, cy: cx, r: r3,
+								fill: '#37373B'
+							}),
+
+							// 십자 라인
+							h('line', { x1: cx, y1: 6, x2: cx, y2: cx - 15, stroke: lineColor }),
+							h('line', { x1: cx, y1: sz - 6, x2: cx, y2: cx + 15, stroke: lineColor }),
+							h('line', { x1: 6, y1: cx, x2: cx - 15, y2: cx, stroke: lineColor }),
+							h('line', { x1: sz - 6, y1: cx, x2: cx + 15, y2: cx, stroke: lineColor }),
+						]);
+					};
 
                     const emptySpoolIcon = () => {
                         return h('svg', { style: 'width:60px;height:60px;' }, [
@@ -1613,7 +1692,7 @@
                             h('line', { x1: 55, y1: 30, x2: 48, y2: 30, stroke: '#FFF', 'stroke-width': '1', 'data-v-flt00001': '' }),
                         ]);
                     };
-
+					
                     // Build box columns
                     const boxColumns = [];
 
@@ -1629,26 +1708,41 @@
                             const color = mat ? normalizeColor(mat.color) : null;
                             const label = mat ? mat.type : '---';
                             const sel = mat && isSelected(box.id, mat.id);
+							
                             matNodes.push(
-                                h('div', { class: 'box', 'data-v-flt00001': '', onClick: () => mat && selectSlot(box.id, mat.id), style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;' : '' }, [
-                                    h('div', { class: 'title', 'data-v-flt00001': '' }, [
-                                        h('svg', { xmlns: 'http://www.w3.org/2000/svg', width: '85px', height: '28px' }, [
-                                            h('text', { x: '50%', y: '55%', class: 'box-circle', 'dominant-baseline': 'middle', 'text-anchor': 'middle', 'data-v-flt00001': '' }, 'Spool Holder')
-                                        ])
-                                    ]),
-                                    h('div', { class: 'filament', 'data-v-flt00001': '' }, [ color ? spoolIcon(color) : emptySpoolIcon() ]),
-                                    h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
-                                    h('div', { class: 'filament_type', 'data-v-flt00001': '' }, label),
-                                    h('div', { class: 'fs-spool-label', 'data-v-flt00001': '' }, mat ? (mat.percent != null ? mat.percent + '%' : '') : ''),
-                                ])
-                            );
+								h('div', {
+									class: 'box',
+									'data-v-flt00001': '',
+									onClick: () => mat && selectSlot(box.id, mat.id),
+									style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;cursor:pointer;' : 'cursor:pointer;'
+								}, [
+									// CFS랑 동일 구조
+									h('div', { 'data-v-flt00001': '' }, [
+										h('div', { class: 'title', 'data-v-flt00001': '' }, 'Spool Holder')
+									]),
+
+									h('div', { class: 'filament', 'data-v-flt00001': '' }, [
+										color ? spoolIcon(color, false, true) : emptySpoolIcon()
+									]),
+
+									h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
+
+									h('div', { class: 'filament_type', 'data-v-flt00001': '' }, label),
+
+									h('div', { class: 'fs-box-label', 'data-v-flt00001': '' },
+										mat && mat.percent != null ? mat.percent + '%' : ''
+									)
+								])
+							);
 
                             boxColumns.push(
-                                h('div', { class: 'mainbox', style: 'margin-right:10px;width:100px;', 'data-v-flt00001': '' }, [
+                                h('div', { class: 'mainbox', style: 'padding-left:10px;padding-top:10px;padding-right:10px;padding-bottom:10px;', 'data-v-flt00001': '' }, [
                                     h('div', { class: 'box_container', 'data-v-flt00001': '' }, matNodes),
-                                    h('div', { class: 'btnbox', 'data-v-flt00001': '' })
+                                    h('div', { class: 'btnbox', 'data-v-flt00001': '' }),
+									h('div', { class: 'btn', style: 'color:#17cc5f;', 'data-v-flt00001': '' }, null)
                                 ])
                             );
+							
                         } else if (isCFS) {
                             // CFS multi-slot box
                             const slotNodes = (box.materials || []).map((mat, mi) => {
@@ -1658,10 +1752,10 @@
                                 return h('div', { class: 'box', 'data-v-flt00001': '', onClick: () => selectSlot(box.id, mat.id), style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;cursor:pointer;' : 'cursor:pointer;' }, [
                                     h('div', { 'data-v-flt00001': '' }, [
                                         h('div', { class: 'title', 'data-v-flt00001': '' }, [
-                                            h('text', { x: '50%', y: '55%', class: 'box-circle', 'dominant-baseline': 'middle', 'text-anchor': 'middle', 'data-v-flt00001': '' }, `${bi + 1}${slotLabel}`)
+                                            h('div', { class: 'title' }, `${bi + 1}${slotLabel}`)
                                         ])
                                     ]),
-                                    h('div', { class: 'filament', 'data-v-flt00001': '' }, [ spoolIcon(color) ]),
+                                    h('div', { class: 'filament', 'data-v-flt00001': '' }, [ spoolIcon(color, false, false) ]),
                                     h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
                                     h('div', { class: 'filament_type', 'data-v-flt00001': '' }, mat.type || '---'),
                                     h('div', { class: 'fs-box-label', 'data-v-flt00001': '' }, mat.percent != null ? mat.percent + '%' : ''),
@@ -1672,7 +1766,7 @@
                             const infoStr = (box.humidity != null ? `${box.humidity}RH%` : '') + (box.temp != null ? `  ${box.temp}°C` : '');
 
                             boxColumns.push(
-                                h('div', { class: 'mainbox', 'data-v-flt00001': '' }, [
+                                h('div', { class: 'mainbox', style: 'padding-left:10px;padding-top:10px;padding-right:10px;padding-bottom:5px;', 'data-v-flt00001': '' }, [
                                     h('div', { class: 'box_container', 'data-v-flt00001': '' }, slotNodes),
                                     h('div', { class: 'btnbox', 'data-v-flt00001': '' }, [
                                         infoStr ? h('div', { class: 'btn', style: 'color:#17cc5f;', 'data-v-flt00001': '' }, infoStr) : null
@@ -1681,14 +1775,16 @@
                             );
                         }
                     });
-
+					//console.log('materialBoxs ===', fs.boxsInfo.materialBoxs);
+					//console.log(boxColumns[0].appContext);
+					
                     const selectedMat = (() => {
                         if (!fs.selectedSlot) return null;
                         const box = boxes.find(b => b.id === fs.selectedSlot.boxId);
                         if (!box) return null;
                         return (box.materials || []).find(m => m.id === fs.selectedSlot.matId) || null;
                     })();
-
+					
                     const statusText = selectedMat
                         ? `Selected: ${selectedMat.type} ${normalizeColor(selectedMat.color)}`
                         : 'Select a slot and click the "Feed"/"Retract" button';
@@ -1711,19 +1807,8 @@
                             h('div', { class: 'filament-container-wrapper', 'data-v-flt00001': '' }, [
                                 h('div', { class: 'filament-wrapper', 'data-v-flt00001': '' }, boxColumns)
                             ]),
-                            // Status bar
-                            h('div', { class: 'filament-status', 'data-v-flt00001': '' }, [
-                                h('i', { class: 'iconfont icon-a-xingzhuang15', style: 'color:#17cc5f;', 'data-v-flt00001': '' }),
-                                td(statusText)
-                            ]),
                             // Buttons
                             h('div', { class: 'filament-btn', 'data-v-flt00001': '' }, [
-                                h('button', { type: 'button', class: 'el-button', 'aria-disabled': 'false', onClick: () => {} }, [
-                                    h('span', {}, [ h('i', { class: 'iconfont icon-a-xingzhuang16' }) ])
-                                ]),
-                                h('button', { type: 'button', class: 'el-button el-button--default', 'aria-disabled': 'false', onClick: () => {} }, [
-                                    h('span', {}, 'Guide')
-                                ]),
                                 h('button', {
                                     type: 'button',
                                     class: nc(['el-button el-button--default self_btn', { 'is-disabled': !fs.selectedSlot }]),
@@ -1741,10 +1826,16 @@
                             ])
                         ])
                     ]));
+					
+				
                 };
+			
             }
+			
         };
-        const FilamentSettingComp = FilamentSettingDef;
+		
+        console.log(FilamentSettingDef);
+		const FilamentSettingComp = FilamentSettingDef;
         // ── end FilamentSetting ──────────────────────────────────────────
 
         var xe = ve;
@@ -2290,12 +2381,12 @@
                     immediate: !0
                 }),
                 Object(a["watch"])(() => r.maxNozzleTemp, e => {
-                    console.log("最大喷嘴温度: ", e)
+                    console.log("Max nozzle temp: ", e)
                 }, {
                     immediate: !0
                 }),
                 Object(a["watch"])(() => r.maxBedTemp, e => {
-                    console.log("最大热床温度: ", e)
+                    console.log("Max bed temp: ", e)
                 }, {
                     immediate: !0
                 });
@@ -2810,31 +2901,33 @@
                     r.fileMenus[2].name = o("FileManage.newName")
                 }),
                 Object(a["watch"])(() => n.retGcodeFileInfo, async e => {
-                    console.log("数据更新啦", 6666),
-                    r.tableData = [];
-                    const t = e.fileInfo,
-                    n = t.split(";").filter(e => !!e);
-                    let a = [];
-                    for (const o of n) {
-                        const e = o.split(":"),
-                        t = `http://${r.ip}:80`,
-                        n = e[6].substring(e[6].lastIndexOf("/") + 1),
-                        i = `${t}/downloads/humbnail/${n}`,
-                        c = `${t}/downloads/defData/${n}`,
-                        s = await I(i, c);
-                        a.push({
-                            path: e[0],
-                            name: e[1],
-                            size: +e[2],
-                            layer: +e[3],
-                            time: e[4],
-                            length: +e[5] / 1e3,
-                            thumb: s
-                        })
-                    }
-                    r.tableData = a.sort((e, t) => t.time - e.time),
-                    r.tableDataFlag = !0
-                }),
+					console.log("Update data ", 6666)
+
+					const t = e.fileInfo
+					const list = t.split(";").filter(e => !!e)
+
+					const result = await Promise.all(list.map(async (o) => {
+						const e = o.split(":")
+						const s = await I('', '')
+
+						return {
+							path: e[0],
+							name: e[1],
+							size: +e[2],
+							layer: +e[3],
+							time: e[4],
+							length: +e[5] / 1e3,
+							thumb: s
+						}
+					}))
+
+					const sorted = result.sort((e, t) => t.time - e.time)
+
+					// 💥 여기만 중요
+					r.tableData.splice(0, r.tableData.length, ...sorted)
+
+					r.tableDataFlag = !0
+				}),
                 Object(a["watch"])(() => n.historyList, e => {
                     e && e.length && (r.hisTableData = JSON.parse(JSON.stringify(e)))
                 }, {
@@ -2854,10 +2947,9 @@
                                 reqGcodeFile: 1
                             }
                         }),
-                        r.tableDataFlag && (console.log("什么状态66666", r.tableDataFlag), clearInterval(t), t = null)
+                        r.tableDataFlag && (console.log("State 66666", r.tableDataFlag), clearInterval(t), t = null)
                     }, 3e3);
                     window.oncontextmenu = e => {
-                        e.preventDefault(),
                         p.value = !1
                     },
                     window.onclick = e => {
@@ -2919,6 +3011,7 @@
                                 _: 1
                             }), Object(a["withDirectives"])(Object(a["createElementVNode"])("div", St, [Object(a["createVNode"])(m, {
                                             data: r.tableData,
+											rowKey: 'name',
                                             style: {
                                                 width: "100%"
                                             },
@@ -3318,7 +3411,7 @@
                     c[0].temInfo = r("moveControl.printSpeed")
                 }),
                 Object(a["watch"])(() => n.curFeedratePct, e => {
-                    console.log("当前打印机速度", e),
+                    console.log("Current printer speed", e),
                     c[0].temNow = e
                 }),
                 Object(a["watch"])(() => n.autohome, e => {
@@ -4779,7 +4872,7 @@
                         msg: new Date
                     }),
                     this.waitingTimer = this.waitingServer(),
-                    console.log("心跳间隔时间是多少: ", this.waitingTimer)
+                    console.log("Heartbeat interval : ", this.waitingTimer)
                 }, e)
             }
             waitingServer() {
@@ -4846,14 +4939,14 @@
     "67e1": function (e, t, n) {
         var a = n("24fb");
         t = a(!1),
-        t.push([e.i, ".comp-FilamentSetting[data-v-flt00001]{width:100%;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px;margin-bottom:0}.comp-FilamentSetting .fs-header[data-v-flt00001]{display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:#2d2d31;border-radius:5px 5px 0 0;cursor:pointer}.comp-FilamentSetting .fs-header .fs-title[data-v-flt00001]{font-size:13px;font-weight:700;color:#d2d2da}.comp-FilamentSetting .fs-header .fold .iconfont[data-v-flt00001]{color:#d2d2da;font-size:8px}.comp-FilamentSetting .fs-body[data-v-flt00001]{overflow:hidden;transition:height .25s ease}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 0;display:flex;flex-wrap:nowrap;overflow-x:auto}.comp-FilamentSetting .filament-wrapper[data-v-flt00001]{display:flex;align-items:flex-start;gap:6px}.comp-FilamentSetting .mainbox[data-v-flt00001]{display:flex;flex-direction:column;align-items:center}.comp-FilamentSetting .box_container[data-v-flt00001]{display:flex;flex-direction:row;gap:4px}.comp-FilamentSetting .box[data-v-flt00001]{display:flex;flex-direction:column;align-items:center;width:72px}.comp-FilamentSetting .box .title[data-v-flt00001]{display:flex;align-items:center;justify-content:center;height:28px;font-size:11px;color:#cbcbcc}.comp-FilamentSetting .box .filament[data-v-flt00001]{display:flex;justify-content:center;align-items:center;height:64px}.comp-FilamentSetting .box-circle[data-v-flt00001]{fill:#cbcbcc;stroke:#cbcbcc}.comp-FilamentSetting .box .filament_type[data-v-flt00001]{font-size:10px;color:#cbcbcc;margin-top:3px;text-align:center;width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]{font-size:11px;color:#888;cursor:pointer;margin-top:2px}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]:hover{color:#1e9be2}.comp-FilamentSetting .box .current_flag[data-v-flt00001]{height:14px;display:flex;justify-content:center}.comp-FilamentSetting .btnbox[data-v-flt00001]{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding-top:28px}.comp-FilamentSetting .btnbox .btn[data-v-flt00001]{font-size:11px;color:#17cc5f;display:flex;align-items:center;gap:3px}.comp-FilamentSetting .filament-status[data-v-flt00001]{padding:6px 14px;font-size:11px;color:#cbcbcc;display:flex;align-items:center;gap:5px}.comp-FilamentSetting .filament-btn[data-v-flt00001]{display:flex;align-items:center;gap:8px;padding:6px 14px 10px}.comp-FilamentSetting .filament-btn .el-button[data-v-flt00001]{height:28px;font-size:12px;border-radius:14px;padding:0 14px}.comp-FilamentSetting .fs-spool-label[data-v-flt00001]{font-size:10px;color:#888;margin-top:2px;text-align:center}.comp-FilamentSetting .fs-box-label[data-v-flt00001]{font-size:10px;color:#1e9be2;margin-top:2px;font-weight:600;text-align:center}", ""]),
+        t.push([e.i, ".comp-FilamentSetting[data-v-flt00001]{width:100%;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px;margin-bottom:0}.comp-FilamentSetting .fs-header[data-v-flt00001]{display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:#2d2d31;border-radius:5px 5px 0 0;cursor:pointer}.comp-FilamentSetting .fs-header .fs-title[data-v-flt00001]{font-size:13px;font-weight:700;color:#d2d2da}.comp-FilamentSetting .fs-header .fold .iconfont[data-v-flt00001]{color:#d2d2da;font-size:8px}.comp-FilamentSetting .fs-body[data-v-flt00001]{overflow:hidden;transition:height .25s ease}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 0;display:flex;flex-wrap:nowrap;overflow-x:auto}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 0;display:flex;justify-content:center;overflow-x:auto}.comp-FilamentSetting .filament-wrapper[data-v-flt00001]{display:flex;align-items:flex-start;gap:6px;width:max-content}.comp-FilamentSetting .mainbox[data-v-flt00001]{display:flex;flex-direction:column;align-items:centerpadding-top: 10px;background: #28282b;border-radius: 6px;border: 1px solid #414145;color: #8c9297;font-size: 12px;}.comp-FilamentSetting .box_container[data-v-flt00001]{display:flex;flex-direction:row;gap:4px}.comp-FilamentSetting .box[data-v-flt00001]{display:flex;flex-direction:column;align-items:center;width:72px}.comp-FilamentSetting .box .title[data-v-flt00001]{display:flex;align-items:center;justify-content:center;height:28px;font-size:15px;color:#cbcbcc}.comp-FilamentSetting .box .filament[data-v-flt00001]{display:flex;justify-content:center;align-items:center;height:64px}.comp-FilamentSetting .box-circle[data-v-flt00001]{fill:#cbcbcc;stroke:#cbcbcc}.comp-FilamentSetting .box .filament_type[data-v-flt00001]{font-size:15px;color:#cbcbcc;margin-top:3px;text-align:center;width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]{font-size:11px;color:#888;cursor:pointer;margin-top:2px}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]:hover{color:#1e9be2}.comp-FilamentSetting .box .current_flag[data-v-flt00001]{height:14px;display:flex;justify-content:center}.comp-FilamentSetting .btnbox[data-v-flt00001]{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding-top:28px}.comp-FilamentSetting .btnbox .btn[data-v-flt00001]{font-size:11px;color:#17cc5f;display:flex;align-items:center;gap:3px}.comp-FilamentSetting .filament-status[data-v-flt00001]{padding:6px 14px;font-size:11px;color:#cbcbcc;display:flex;align-items:center;gap:5px}.comp-FilamentSetting .filament-btn[data-v-flt00001]{display:flex;align-items:center;gap:8px;padding:6px 14px 10px}.comp-FilamentSetting .filament-btn .el-button[data-v-flt00001]{height:28px;font-size:12px;border-radius:14px;padding:0 14px}.comp-FilamentSetting .fs-spool-label[data-v-flt00001]{font-size:10px;color:#888;margin-top:2px;text-align:center}.comp-FilamentSetting .fs-box-label[data-v-flt00001]{font-size:15px;color:#1e9be2;margin-top:2px;font-weight:600;text-align:center;,.comp-FilamentSetting[data-v-flt00001] .box_container[data-v-flt00001]{justify-content:center;align-items:center}}", ""]),
         t.push([e.i, ".controlAnimal[data-v-d06bcaee]{height:40px!important}.control-main[data-v-d06bcaee]{width:100%;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px}.control-main .fold[data-v-d06bcaee]{cursor:pointer}.control-main .fold .iconfont[data-v-d06bcaee]{color:#d2d2da;font-size:8px}.control-main .head-show[data-v-d06bcaee]{width:81%}.control-main .head-show .left-feature[data-v-d06bcaee]{width:54px;padding:12px 15px;font-size:16px;font-weight:700;color:#fff}.control-main .head-show .left-feature span[data-v-d06bcaee]{padding-left:5px}.control-main .head-show .right-feature[data-v-d06bcaee]{padding:8px 15px;display:flex;justify-content:space-evenly}.control-main .head-show .right-feature .head_inner[data-v-d06bcaee]{padding:1% 0 0 1%;font-size:14px}.control-main .middleContent[data-v-d06bcaee]{width:100%;display:flex;justify-content:flex-start}.control-main .middleContent .active[data-v-d06bcaee]{background:#00a3ff}.control-main .middleContent .leftPrintshow[data-v-d06bcaee]{width:19%;padding:11px 0 0 20px}.control-main .middleContent .leftPrintshow .btn_container .el-button[data-v-d06bcaee]{width:97%;height:40px;box-shadow:0 3px 3px 0 rgba(31,31,35,.5);border-radius:5px}.control-main .middleContent .leftPrintshow .btn_container .el-button[data-v-d06bcaee]:first-child{margin-top:10px}.control-main .middleContent .rightPrintshow[data-v-d06bcaee]{width:96%;height:500px;background:#2d2d31;border-radius:5px;margin:20px;position:relative}.control-main .middleContent .rightPrintshow .flat-manual[data-v-d06bcaee]{display:flex;justify-content:center;align-items:center}.control-main .middleContent .rightPrintshow .flat-block[data-v-d06bcaee]{width:310px;height:310px;background:#2d2d31;border:1px solid #46464a;border-radius:5px}.control-main .middleContent .rightPrintshow .flat-block .row-btn[data-v-d06bcaee]{display:flex;justify-content:space-between}.control-main .middleContent .rightPrintshow .flat-block .el-button[data-v-d06bcaee]{width:103px;height:103px;border-radius:0;font-size:36px;color:#1e9be2;text-align:center;line-height:103px}.control-main .middleContent .rightPrintshow .content[data-v-d06bcaee]{width:100%;height:100%;position:relative}.control-main .middleContent .rightPrintshow .flat-auto[data-v-d06bcaee]{width:100%;height:100%}.control-main .middleContent .rightPrintshow .auto-menu[data-v-d06bcaee]{width:160px;position:absolute;right:2.5%;bottom:5%}.control-main .middleContent .rightPrintshow .auto-menu .el-checkbox[data-v-d06bcaee]{width:160px}.control-main .middleContent .rightPrintshow .auto-menu .el-checkbox[data-v-d06bcaee] .is-checked .el-checkbox__inner{background:#1e9be2}.control-main .middleContent .rightPrintshow .auto-menu .el-checkbox[data-v-d06bcaee] .el-checkbox__label{font-family:Source Han Sans CN;font-weight:500;color:#fff}.control-main .middleContent .rightPrintshow .auto-menu .el-button[data-v-d06bcaee]{width:160px}", ""]),
         e.exports = t
     },
     "6aea": function (e, t, n) {
         var a = n("24fb");
         t = a(!1),
-        t.push([e.i, ":root{--el-color-primary:#4f4f54}.el-input{--el-input-text-color:#fff;--el-input-border:#4f4f54;--el-input-bg-color:transparent;background-color:transparent;border:1px solid var(--el-input-border);border-radius:5px}.el-input:focus-within{border:1px solid #00a3ff}.el-input:focus-within .el-input__wrapper .el-input__inner{color:#00a3ff!important}.el-input .el-input__wrapper{background-color:transparent;box-shadow:unset}.el-input .el-input-group__append{padding:0 5px;box-shadow:none;background:none;color:#a7a7a7;font-size:12px}.el-popper.is-dark{background:#37373b!important}.el-popper.is-dark .el-select-dropdown .el-select-dropdown__item{color:#fff!important}.el-popper.is-dark .el-select-dropdown .el-select-dropdown__item.hover,.el-popper.is-dark .el-select-dropdown .el-select-dropdown__item:hover{background-color:#46464a!important}.el-popper.is-dark .el-popper__arrow:before{background:#37373b!important}.el-switch{--el-switch-on-color:#144f71;--el-switch-off-color:#4f4f54}.el-switch .el-switch__core{background:#4f4f54;border-radius:16px}.el-switch .el-switch__action{background:#27272a;border-radius:13px}.el-switch.is-checked .el-switch__core .el-switch__action{background:#00a3ff}.el-button{--el-button-font-weight:var(--el-font-weight-primary);--el-button-border-color:transparent;--el-button-bg-color:#515157;--el-button-text-color:#fff;--el-button-divide-border-color:hsla(0,0%,100%,0.5);--el-button-hover-text-color:#fff;--el-button-hover-bg-color:#515157;--el-button-hover-border-color:transparent;--el-button-active-text-color:#fff;--el-button-active-border-color:transparent;--el-button-active-bg-color:#00a3ff;--el-input-border-radius:5px;box-shadow:0 3px 3px 0 #303034}.el-button:hover{background:#6c6c74!important;color:#fff}.el-button:hover :deep().iconfont{color:#fff!important}.el-slider{--el-slider-main-bg-color:#144f71;--el-slider-runway-bg-color:#dadada;--el-slider-border-radius:3px;--el-slider-height:2px;--el-slider-button-size:12px;--el-slider-button-wrapper-size:36px;--el-slider-button-wrapper-offset:-18px}.el-slider .el-slider__button{border:none;background-color:#00a3ff}.el-progress .el-progress-bar__outer{background:#404044;height:2px!important}.el-progress .el-progress-bar__inner{background:#1e9be2}.el-progress .el-progress__text{font-size:10px;color:#fff}.el-table{--el-table-bg-color:transparent;--el-table-tr-bg-color:transparent;--el-table-header-bg-color:transparent;--el-table-row-hover-bg-color:unset;--el-table-border-color:#46464a;--el-table-text-color:#cbcbcc;--el-table-header-text-color:#cbcbcc}.el-table th .el-checkbox__inner,.el-table tr .el-checkbox__inner{background-color:transparent;border:1px solid #5e5e64}.el-table th .el-checkbox__input.is-checked .el-checkbox__inner,.el-table tr .el-checkbox__input.is-checked .el-checkbox__inner{background-color:#1e9be2}.el-table .el-table__inner-wrapper .el-table__body-wrapper .el-scrollbar .el-table__body .el-table__row:hover{background:#46464a!important;cursor:pointer}.el-table .el-table__inner-wrapper:before{left:0;bottom:0;width:100%;height:0}.el-message-box{background:#37373b;border:none}.el-message-box .el-message-box__message,.el-message-box .el-message-box__title{color:#cbcbcc}.el-message{top:20px!important;background:#29292c;border:none;box-shadow:0 3px 3px 0 #303034;max-width:600px}.el-message:not(:last-child){visibility:hidden}.el-checkbox{--el-checkbox-bg-color:transparent}.el-dialog{--el-dialog-bg-color:#37373b}.el-dialog .el-dialog__title{color:#cbcbcc}.el-popper.is-dark{background:#000}.el-popper.is-dark .el-popper__arrow:before{background:#000;border:1px solid #000}", ""]),
+        t.push([e.i, ":root{--el-color-primary:#4f4f54}.el-input{--el-input-text-color:#fff;--el-input-border:#4f4f54;--el-input-bg-color:transparent;background-color:transparent;border:1px solid var(--el-input-border);border-radius:5px}.el-input:focus-within{border:1px solid #00a3ff}.el-input:focus-within .el-input__wrapper .el-input__inner{color:#00a3ff!important}.el-input .el-input__wrapper{background-color:transparent;box-shadow:unset}.el-input .el-input-group__append{padding:0 5px;box-shadow:none;background:none;color:#a7a7a7;font-size:12px}.el-popper.is-dark{background:#37373b!important}.el-popper.is-dark .el-select-dropdown .el-select-dropdown__item{color:#fff!important}.el-popper.is-dark .el-select-dropdown .el-select-dropdown__item.hover,.el-popper.is-dark .el-select-dropdown .el-select-dropdown__item:hover{background-color:#46464a!important}.el-popper.is-dark .el-popper__arrow:before{background:#37373b!important}.el-switch{--el-switch-on-color:#144f71;--el-switch-off-color:#4f4f54}.el-switch .el-switch__core{background:#4f4f54;border-radius:16px}.el-switch .el-switch__action{background:#27272a;border-radius:13px}.el-switch.is-checked .el-switch__core .el-switch__action{background:#00a3ff}.el-button{--el-button-font-weight:var(--el-font-weight-primary);--el-button-border-color:transparent;--el-button-bg-color:#515157;--el-button-text-color:#fff;--el-button-divide-border-color:hsla(0,0%,100%,0.5);--el-button-hover-text-color:#fff;--el-button-hover-bg-color:#515157;--el-button-hover-border-color:transparent;--el-button-active-text-color:#fff;--el-button-active-border-color:transparent;--el-button-active-bg-color:#00a3ff;--el-input-border-radius:5px;box-shadow:0 3px 3px 0 #303034}.el-button:hover{background:#6c6c74!important;color:#fff}.el-button:hover :deep().iconfont{color:#fff!important}.el-slider{--el-slider-main-bg-color:#144f71;--el-slider-runway-bg-color:#dadada;--el-slider-border-radius:3px;--el-slider-height:2px;--el-slider-button-size:12px;--el-slider-button-wrapper-size:36px;--el-slider-button-wrapper-offset:-18px}.el-slider .el-slider__button{border:none;background-color:#00a3ff}.el-progress .el-progress-bar__outer{background:#404044;height:2px!important}.el-progress .el-progress-bar__inner{background:#1e9be2}.el-progress .el-progress__text{font-size:10px;color:#fff}.el-table{--el-table-bg-color:transparent;--el-table-tr-bg-color:transparent;--el-table-header-bg-color:transparent;--el-table-row-hover-bg-color:unset;--el-table-border-color:#46464a;--el-table-text-color:#cbcbcc;--el-table-header-text-color:#cbcbcc}.el-table th .el-checkbox__inner,.el-table tr .el-checkbox__inner{background-color:transparent;border:1px solid #5e5e64}.el-table th .el-checkbox__input.is-checked .el-checkbox__inner,.el-table tr .el-checkbox__input.is-checked .el-checkbox__inner{background-color:#1e9be2}.el-table .el-table__inner-wrapper .el-table__body-wrapper{overflow-y: scroll !important;} .el-scrollbar .el-table__body .el-table__row:hover{background:#46464a!important;cursor:pointer}.el-table .el-table__inner-wrapper:before{left:0;bottom:0;width:100%;height:0}.el-message-box{background:#37373b;border:none}.el-message-box .el-message-box__message,.el-message-box .el-message-box__title{color:#cbcbcc}.el-message{top:20px!important;background:#29292c;border:none;box-shadow:0 3px 3px 0 #303034;max-width:600px}.el-message:not(:last-child){visibility:hidden}.el-checkbox{--el-checkbox-bg-color:transparent}.el-dialog{--el-dialog-bg-color:#37373b}.el-dialog .el-dialog__title{color:#cbcbcc}.el-popper.is-dark{background:#000}.el-popper.is-dark .el-popper__arrow:before{background:#000;border:1px solid #000}", ""]),
         e.exports = t
     },
     "781d": function (e, t, n) {
