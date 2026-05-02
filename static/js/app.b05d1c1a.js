@@ -26,11 +26,7 @@
     },
     r = [];
     function i(e) {
-        return c.p + "static/js/" + ({}
-            [e] || e) + "." + {
-            "chunk-2d0db81a": "f53abaff"
-        }
-        [e] + ".js"
+        return;
     }
     function c(t) {
         if (a[t])
