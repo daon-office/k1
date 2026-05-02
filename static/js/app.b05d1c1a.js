@@ -4727,7 +4727,7 @@
         sa = !0;
         class la extends WebSocket {
             constructor(e) {
-                return super(url),
+                return super(e),
                 this
             }
             init() {
