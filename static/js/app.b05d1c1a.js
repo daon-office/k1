@@ -4726,10 +4726,14 @@
         },
         sa = !0;
         class la extends WebSocket {
-            constructor(e) {
-                return super(e),
-                this
-            }
+            constructor() {
+				const params = new URLSearchParams(window.location.search);
+				const ip = params.get("ip");
+
+				super(`ws://${ip}:9999`);
+
+				this.init();
+			}
             init() {
 				this.onopen = this.openHandler,
 				this.onclose = this.closeHandler,
