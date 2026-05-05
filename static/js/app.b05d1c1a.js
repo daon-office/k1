@@ -1911,7 +1911,7 @@
                           fra = Object(a["Fragment"]);
 
                     const boxes = fs.boxsInfo?.materialBoxs || [];
-					console.log(boxes);
+					//console.log(boxes);
                     const hasCFS = boxes.some(b => b.type === 0);
 
                     // Build UI nodes imperatively to stay compatible with minified Vue runtime
