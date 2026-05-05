@@ -531,7 +531,7 @@
                     i = Object(a["resolveDirective"])("loading");
                     return Object(a["withDirectives"])((Object(a["openBlock"])(), Object(a["createElementBlock"])("div", {
                                 id: "nav",
-                                "element-loading-text": "设备连接中...",
+                                "element-loading-text": "장치 연결 중...",
                                 "element-loading-spinner": n,
                                 "element-loading-svg-view-box": "-10, -10, 50, 50",
                                 "element-loading-background": "rgba(255, 255, 255, 0.8)",
@@ -586,13 +586,13 @@
                     socket: null,
                     languageOption: [{
                             value: 0,
-                            label: "简体中文"
+                            label: "한국어"
                         }, {
                             value: 1,
                             label: "English"
                         }
                     ],
-                    selectVal: "English"
+                    selectVal: "한국어"
                 });
                 Object(a["onMounted"])(() => {
                     const {
@@ -636,7 +636,7 @@
                     "none" === e.style.display ? e.style.display = "block" : e.style.display = "none"
                 }
                 function l(e) {
-                    0 === e && (o.selectVal = "简体中文", t.value = "zh"),
+                    0 === e && (o.selectVal = "한국어", t.value = "zh"),
                     1 === e && (o.selectVal = "English", t.value = "en");
                     const n = document.getElementsByClassName("el-popper")[0];
                     n.style.display = "none"
@@ -671,10 +671,7 @@
                                                                                     value: e.value
                                                                                 }, null, 8, ["label", "value"]))), 128))]),
                                                         _: 1
-                                                    }, 8, ["modelValue", "placeholder"])]), Object(a["createElementVNode"])("i", {
-                                                class: "iconfont",
-                                                onClick: i
-                                            }, "")])]), Object(a["createVNode"])(p)])
+                                                    }, 8, ["modelValue", "placeholder"])]), Object(a["createElementVNode"])("img", {src: "./static/img/power.png",style: {width: "35px",height: "35px",cursor: "pointer"},onClick: i})])]), Object(a["createVNode"])(p)])
                 }
             }
         },
@@ -1065,7 +1062,7 @@
                 }),
                 c = Object(a["ref"])(null);
                 Object(a["watch"])([() => t.objects, () => t.excluded_objects, () => t.model], () => {
-                    t.model && ("K1 Max" === t.model ? (console.log("当前打印机型号", t.model), r.viewBoxInt = "-26 0 350 300", r.deviceStyle = !0) : (r.viewBoxInt = "0 0 300 290", r.deviceStyle = !1)),
+                    t.model && ("K1 Max" === t.model ? (console.log("Current printer model", t.model), r.viewBoxInt = "-26 0 350 300", r.deviceStyle = !0) : (r.viewBoxInt = "0 0 300 290", r.deviceStyle = !1)),
                     t.objects && t.objects.length > 0 && (r.excluded_data = JSON.parse(t.objects), console.log("Excluded object data listening was detected.", JSON.parse(t.objects)), V().partUpdate(r.excluded_data)),
                     t.excluded_objects && (r.lightObjects = JSON.parse(t.excluded_objects))
                 }, {
@@ -1220,178 +1217,93 @@
             class: "auto-menu"
         };
         var we = {
-            __name: "LevelControl",
-            setup(e) {
-                const t = i();
-                let n = Object(a["reactive"])({
-                    foldFlag: !0,
-                    levelCount: 60,
-                    showBedFace: !1,
-                    showBedMesh: !1,
-                    socket: null,
-                    echart: null,
-                    checked: 2
-                });
-                const o = () => {
-                    n.foldFlag = !1
-                },
-                r = () => {
-                    n.foldFlag = !0
-                };
-                let c = [];
-                const s = () => {
-                    let e = "rgba(255,255,255,0.25)",
-                    t = "#ffffff";
-                    const a = 16,
-                    o = .1,
-                    r = {
-                        itemWidth: 25,
-                        itemHeight: 280
-                    },
-                    i = {
-                        nameTextStyle: {
-                            color: e
-                        },
-                        axisPointer: {
-                            lineStyle: {
-                                color: t,
-                                opacity: .65
-                            },
-                            label: {
-                                margin: 16,
-                                color: e,
-                                fontSize: a
-                            }
-                        },
-                        axisTick: {
-                            lineStyle: {
-                                color: t,
-                                opacity: o
-                            }
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                color: t,
-                                opacity: o,
-                                width: 2
-                            }
-                        },
-                        axisLabel: {
-                            textStyle: {
-                                color: e,
-                                fontSize: a
-                            }
-                        },
-                        splitLine: {
-                            lineStyle: {
-                                color: t,
-                                opacity: o
-                            }
-                        }
-                    },
-                    s = d.value,
-                    l = [];
-                    let p = 0,
-                    u = 0,
-                    h = .25;
-                    if (s.length)
-                        for (var m = 0; m < s.length; m++)
-                            s[m].z > u && (u = s[m].z), s[m].z < p && (p = s[m].z), l.push([s[m].x, s[m].y, s[m].z]), c.push([s[m].x, s[m].y, 0]);
-                    let b = {
-                        tooltip: {
-                            textStyle: {
-                                align: "left",
-                                color: "#dbdbdc"
-                            },
-                            backgroundColor: "#515157",
-                            borderColor: "#515157",
-                            formatter: function (e) {
-                                let t = "";
-                                return e.value && Array.isArray(e.value) && (t += `\n        <div >\n          <span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${e.color};"></span>\n          <div style="clear: both"></div>\n          <span style="font-size:16px;font-weight:400;margin-left:2px">\n            x: ${e.value[0]}\n          </span>\n          <div style="clear: both"></div>\n          <span style="font-size:16px;font-weight:400;margin-left:2px">\n            y: ${e.value[1]}\n          </span>\n          <div style="clear: both"></div>\n          <span style="font-size:16px;font-weight:400;margin-left:2px">\n            z: ${e.value[2]}\n          </span>\n          <div style="clear: both"></div>\n        </div>\n        `),
-                                t
-                            }
-                        },
-                        visualMap: {
-                            type: "continuous",
-                            textStyle: {
-                                color: e,
-                                fontSize: a
-                            },
-                            realtime: !0,
-                            calculable: !0,
-                            show: !0,
-                            top: 39,
-                            right: 35,
-                            dimension: 2,
-                            precision: 4,
-                            seriesIndex: 0,
-                            min: +p - h,
-                            max: +u + h,
-                            inRange: {
-                                color: ["#313695", "#4575b4", "#74add1", "#abd9e9", "#e0f3f8", "#ffffbf", "#fee090", "#fdae61", "#f46d43", "#d73027", "#a50026"]
-                            },
-                            ...r
-                        },
-                        xAxis3D: {
-                            type: "value",
-                            ...i
-                        },
-                        yAxis3D: {
-                            type: "value",
-                            ...i
-                        },
-                        zAxis3D: {
-                            type: "value",
-                            interval: .5,
-                            max: 1,
-                            min: -1,
-                            ...i
-                        },
-                        grid3D: {},
-                        series: [{
-                                name: "探测点矩阵",
-                                type: "surface",
-                                wireframe: {
-                                    show: n.showBedMesh,
-                                    lineStyle: {
-                                        color: "#66AEFF"
-                                    }
-                                },
-                                data: l
-                            }
-                        ]
-                    };
-                    return b
-                },
-                l = () => {
-                    const e = document.querySelector(".flat-auto");
-                    if (!e)
-                        return;
-                    const t = n.echart.init(e);
-                    c = [];
-                    let a = JSON.parse(JSON.stringify(s()));
-                    n.showBedFace ? a.series.push({
-                        name: "参考平面",
-                        type: "surface",
-                        color: "rgba(128, 128, 128,0.25)",
-                        wireframe: {
-                            show: n.showBedMesh
-                        },
-                        data: c
-                    }) : a.series = a.series.filter(e => "参考平面" !== e.name),
-                    t.clear(),
-                    a && t.setOption(a),
-                    window.addEventListener("resize", () => t.resize())
-                },
-                d = Object(a["ref"])([]);
-                Object(a["watch"])(() => t.probedMatrix, e => {
-                    d.value = e ? e.val : [],
-                    l(s())
-                }),
-                Object(a["watch"])([() => n.showBedMesh, () => n.showBedFace], () => {
-                    d.value.length && l()
-                });
-                const p = () => {
+			__name: "LevelControl",
+			setup(e) {
+				let chartInstance = null;
+				let isInteracting = false;
+				const t = i(); // 외부 store/instance
+				let n = Object(a["reactive"])({
+					foldFlag: !0,
+					levelCount: 60,
+					showBedFace: !1,
+					showBedMesh: !1,
+					socket: null,
+					echart: null,
+					checked: 2
+				});
+
+				const o = () => { n.foldFlag = !1 },
+					  r = () => { n.foldFlag = !0 };
+				
+				let c = []; 
+				let d = Object(a["ref"])([]);
+				
+				const l = () => {
+					if (!chartInstance) return;
+
+					c = [];
+
+					const sData = d.value || [];
+					const data = [];
+
+					let p = Infinity;
+					let u = -Infinity;
+
+					for (let i = 0; i < sData.length; i++) {
+						const z = Number(sData[i].z);
+
+						if (!isNaN(z)) {
+							if (z > u) u = z;
+							if (z < p) p = z;
+						}
+
+						data.push([sData[i].x, sData[i].y, z]);
+						c.push([sData[i].x, sData[i].y, 0]);
+					}
+
+					if (!isFinite(p) || !isFinite(u)) {
+						p = -1;
+						u = 1;
+					}
+
+					chartInstance.setOption({
+						visualMap: {
+							min: p,
+							max: u,
+							dimension: 2,
+							seriesIndex: 0,
+							precision: 4, 
+							formatter: (v) => v.toFixed(4)
+						},
+
+						series: n.showBedFace
+							? [
+								{
+									type: "surface",
+									data: data,
+									wireframe: { show: n.showBedMesh }
+								},
+								{
+									type: "surface",
+									data: c,
+									itemStyle: { opacity: 0.3 },
+									wireframe: { show: false }
+								}
+							]
+							: [
+								{
+									type: "surface",
+									data: data,
+									wireframe: { show: n.showBedMesh }
+								}
+							]
+
+					}, {
+						replaceMerge: ['series']   // 💥 이거 없으면 베드 안사라짐
+					});
+				};
+				
+				const p = () => {
                     n.socket.sendMsg({
                         method: "set",
                         params: {
@@ -1399,21 +1311,155 @@
                         }
                     })
                 };
-                return Object(a["onMounted"])(() => {
-                    const {
-                        proxy: e
-                    } = Object(a["getCurrentInstance"])();
-                    n.socket = e.$webSocket,
-                    n.echart = e.$echarts,
-                    l(s()),
-                    n.socket.sendMsg({
-                        method: "get",
-                        params: {
-                            reqProbedMatrix: 1
-                        }
-                    })
-                }),
-                (e, t) => {
+				const resetView = () => {
+					if (!chartInstance) return;
+
+					chartInstance.setOption({
+						grid3D: {
+							viewControl: {
+								alpha: 20,      // 위/아래 각도 (기본값 느낌)
+								beta: 40,       // 좌우 각도
+								distance: 200,  // 줌 거리
+								center: [0, 0, 0]
+							}
+						}
+					}, false);
+				};
+
+				Object(a["onMounted"])(() => {
+					const { proxy: e } = Object(a["getCurrentInstance"])();
+					n.socket = e.$webSocket;
+					n.echart = e.$echarts;
+
+					// [중요] 렌더 함수에 .flat-auto가 반드시 있어야 합니다.
+					const el = document.querySelector(".flat-auto");
+
+					if (el && n.echart) {
+						chartInstance = n.echart.init(el);
+						
+						chartInstance.on('mousedown', () => { isInteracting = true; });
+						chartInstance.on('mouseup', () => { isInteracting = false; });
+						chartInstance.on('globalout', () => { isInteracting = false; });
+						
+						// 최초 1번
+						chartInstance.setOption({
+							animation: false,
+
+							tooltip: {
+								textStyle: {
+									align: "left",
+									color: "#dbdbdc"
+								},
+								backgroundColor: "#515157",
+								borderColor: "#515157",
+								formatter: function (e) {
+									if (!e.value || !Array.isArray(e.value)) return "";
+									return `
+									<div>
+										<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${e.color};"></span>
+										<div>x: ${e.value[0]}</div>
+										<div>y: ${e.value[1]}</div>
+										<div>z: ${e.value[2]}</div>
+									</div>`;
+								}
+							},
+
+							grid3D: {
+								viewControl: {
+									damping: 0.1,
+									rotateSensitivity: 1,
+									zoomSensitivity: 1
+								}
+							},
+
+							xAxis3D: {
+								type: "value",
+								nameTextStyle: { color: "rgba(255,255,255,0.25)" },
+								axisPointer: {
+									lineStyle: { color: "#ffffff", opacity: 0.65 },
+									label: { margin: 16, color: "rgba(255,255,255,0.25)", fontSize: 16 }
+								},
+								axisTick: { lineStyle: { color: "#ffffff", opacity: 0.1 } },
+								axisLine: { lineStyle: { color: "#ffffff", opacity: 0.1, width: 2 } },
+								axisLabel: { textStyle: { color: "rgba(255,255,255,0.25)", fontSize: 16 } },
+								splitLine: { lineStyle: { color: "#ffffff", opacity: 0.1 } }
+							},
+
+							yAxis3D: {
+								type: "value",
+								nameTextStyle: { color: "rgba(255,255,255,0.25)" },
+								axisPointer: {
+									lineStyle: { color: "#ffffff", opacity: 0.65 },
+									label: { margin: 16, color: "rgba(255,255,255,0.25)", fontSize: 16 }
+								},
+								axisTick: { lineStyle: { color: "#ffffff", opacity: 0.1 } },
+								axisLine: { lineStyle: { color: "#ffffff", opacity: 0.1, width: 2 } },
+								axisLabel: { textStyle: { color: "rgba(255,255,255,0.25)", fontSize: 16 } },
+								splitLine: { lineStyle: { color: "#ffffff", opacity: 0.1 } }
+							},
+
+							zAxis3D: {
+								type: "value",
+								min: -1,
+								max: 1,
+								interval: 0.5,
+								nameTextStyle: { color: "rgba(255,255,255,0.25)" },
+								axisPointer: {
+									lineStyle: { color: "#ffffff", opacity: 0.65 },
+									label: { margin: 16, color: "rgba(255,255,255,0.25)", fontSize: 16 }
+								},
+								axisTick: { lineStyle: { color: "#ffffff", opacity: 0.1 } },
+								axisLine: { lineStyle: { color: "#ffffff", opacity: 0.1, width: 2 } },
+								axisLabel: { textStyle: { color: "rgba(255,255,255,0.25)", fontSize: 16 } },
+								splitLine: { lineStyle: { color: "#ffffff", opacity: 0.1 } }
+							},
+
+							visualMap: {
+								type: "continuous",
+								dimension: 2,
+								calculable: true,
+								realtime: true,
+								top: 39,
+								right: 35,
+								textStyle: {
+									color: "rgba(255,255,255,0.25)",
+									fontSize: 16
+								},
+								inRange: {
+									color: [
+										"#313695","#4575b4","#74add1","#abd9e9","#e0f3f8",
+										"#ffffbf","#fee090","#fdae61","#f46d43","#d73027","#a50026"
+									]
+								}
+							},
+
+							series: [{
+								type: "surface",
+								wireframe: {
+									show: n.showBedMesh,
+									lineStyle: { color: "#66AEFF" }
+								},
+								data: [],
+								progressive: 0
+							}]
+						});
+					}
+
+					if (n.socket) {
+						n.socket.sendMsg({ method: "get", params: { reqProbedMatrix: 1 } });
+					}
+					
+
+					const stop = Object(a["watch"])(() => t.probedMatrix, e => {
+						if (e && e.val) {
+							d.value = e.val;
+							// 상호작용 중이 아닐 때만 업데이트하거나, 
+							// 데이터가 한 번만 오는 경우라면 즉시 실행
+							l();
+						}
+					});
+				});
+                return (e, t) => {
                     const i = Object(a["resolveComponent"])("el-button"),
                     c = Object(a["resolveComponent"])("el-checkbox");
                     return Object(a["openBlock"])(),
@@ -1426,7 +1472,8 @@
                                 title: e.$t("wangchuang.name"),
                                 class: "header",
                                 icon: ""
-                            }, {
+                            }, 
+							{
                                 right: Object(a["withCtx"])(() => [Object(a["createElementVNode"])("div", ce, [Object(a["unref"])(n).foldFlag ? (Object(a["openBlock"])(), Object(a["createElementBlock"])("i", {
                                                         key: 0,
                                                         class: "iconfont",
@@ -1442,7 +1489,9 @@
                                         style: Object(a["normalizeStyle"])({
                                             display: Object(a["unref"])(n).foldFlag ? "block" : "none"
                                         })
-                                    }, [Object(a["withDirectives"])(Object(a["createElementVNode"])("div", pe, [Object(a["createElementVNode"])("div", ue, [Object(a["createElementVNode"])("div", he, [Object(a["createVNode"])(i, null, {
+                                    }, [
+									Object(a["createVNode"])(i,{onClick:resetView},{default:Object(a["withCtx"])(()=>[Object(a["createTextVNode"])("Reset")]),_:1}),
+									Object(a["withDirectives"])(Object(a["createElementVNode"])("div", pe, [Object(a["createElementVNode"])("div", ue, [Object(a["createElementVNode"])("div", he, [Object(a["createVNode"])(i, null, {
                                                                         default:
                                                                             Object(a["withCtx"])(() => [Object(a["createTextVNode"])("1")]),
                                                                             _: 1
@@ -1480,10 +1529,214 @@
         n("2577");
         const ve = S()(we, [["__scopeId", "data-v-d06bcaee"]]);
 		
+		
+		// ── 2D Level Table Component ───────────────────────────────────
+		const Level2DTable = {
+			__name: "LevelTable2D",
+			setup(e) {
+
+				const t = i(); // store
+				let r = Object(a["reactive"])({
+					foldFlag: !0,
+					socket: null,
+					showData: true
+				});
+
+				let d = Object(a["ref"])([]);
+
+				const open = () => { r.foldFlag = false };
+				const close = () => { r.foldFlag = true };
+
+				// 색상 (파스텔)
+				const getColor = (z, min, max) => {
+					if (max === min) return "#ddd";
+					const ratio = (z - min) / (max - min);
+
+					const hue = (1 - ratio) * 240; // 파랑 → 빨강
+					return `hsl(${hue}, 70%, 80%)`; // 파스텔톤
+				};
+				
+				let list =[];
+
+				// grid 생성
+				const getGrid = () => {
+					if(d.value){
+						list = d.value || [];
+						//console.log('list.length   =  ',list.length);
+						
+						if (!list.length) return { grid: [], min: 0, max: 0 };
+
+						let min = Infinity;
+						let max = -Infinity;
+
+						list.forEach(p => {
+							const zVal = Number(p.z);
+							if (zVal < min) min = zVal;
+							if (zVal > max) max = zVal;
+						});
+
+						return { grid: list, min, max };
+					}
+					
+				};
+
+				Object(a["onMounted"])(() => {
+					const { proxy: e } = Object(a["getCurrentInstance"])();
+
+					r.socket = e.$webSocket;
+
+					r.socket.sendMsg({
+						method: "get",
+						params: { reqProbedMatrix: 1 }
+					});
+
+					const stop = Object(a["watch"])(() => t.probedMatrix, val => {
+						if (val && val.val) {
+							d.value = val.val;
+							//console.log('    d. value = ',d.value);
+							r.showData = true;
+							getGrid();
+							stop(); //
+						}
+					});
+				});
+
+				return (e, t2) => {
+					const Btn = Object(a["resolveComponent"])("el-button");
+
+					return Object(a["openBlock"])(),
+					Object(a["createElementBlock"])("div", {
+						class: Object(a["normalizeClass"])(["control-main", {
+							controlAnimal: !r.foldFlag
+						}])
+					}, [
+
+						// 헤더
+						Object(a["createVNode"])(Object(a["unref"])(P), {
+							title: "2D Level Table",
+							icon: ""
+						}, {
+							right: Object(a["withCtx"])(() => [
+								Object(a["createElementVNode"])("div", {}, [
+									r.foldFlag
+										? Object(a["createElementVNode"])("i", {
+											class: "iconfont",
+											onClick: Object(a["withModifiers"])(open, ["stop"])
+										}, "")
+										: Object(a["createElementVNode"])("i", {
+											class: "iconfont",
+											onClick: Object(a["withModifiers"])(close, ["stop"])
+										}, "")
+								])
+							]),
+							_: 1
+						}),
+
+						// 컨텐츠
+						Object(a["withDirectives"])(
+							(() => {
+								try {
+									const { grid, min, max } = getGrid();
+									
+									if (grid.length === 0) {
+										return;
+									}
+
+									const trElements = [];
+									const rowCount = 5;
+									const colCount = 5;
+
+									// 1차원 배열을 5개씩 끊어서 행(tr) 생성
+									
+									for (let i = rowCount - 1; i >= 0; i--) {
+										const tdElements = [];
+										
+										for (let j = 0; j < colCount; j++) {
+											// 1차원 인덱스 계산 (0~24)
+											const index = i * colCount + j;
+											const cell = grid[index];
+											const NumericZ = cell && cell.z !== undefined ? Number(cell.z) : 0;
+											//console.log('NumericZ = ',NumericZ);
+
+											tdElements.push(
+												Object(a["createElementVNode"])(
+													"td",
+													{
+														key: j,
+														style: {
+															padding: "8px",
+															height: "100px",
+															fontSize: "20px",
+															textAlign: "center",
+															verticalAlign: "middle",
+															background: getColor(NumericZ, min, max),
+															color: "#000",
+															border: "1px solid #444"
+														},
+														innerHTML: NumericZ
+													}
+												)
+											);
+											//console.log(tdElements);
+										}
+
+										trElements.push(
+											Object(a["createElementVNode"])(
+												"tr",
+												{ key: i },
+												tdElements
+											)
+										);
+									}
+
+									return Object(a["createElementVNode"])(
+										"table",
+										{ style: { borderCollapse: "collapse", width: "100%" } },
+										[
+											Object(a["createElementVNode"])(
+												"tbody",
+												null,
+												trElements
+											)
+										]
+									);
+									
+
+								} catch (err) {
+									console.error("🔥 렌더 에러:", err);
+									return Object(a["createElementVNode"])(
+										"div",
+										{ style: { color: "red" } },
+										"render error: " + err.message
+									);
+								}
+							})(),
+							[[a["vShow"], r.foldFlag]]
+						)
+
+
+
+
+
+					]);
+				};
+			}
+		};
+		
+		const Level2DTableComp = Level2DTable;
+		// ── 2D Level Table Component ───────────────────────────────────
+		
         // ── FilamentSetting Component ───────────────────────────────────
         const FilamentSettingDef = {
             __name: "FilamentSetting",
             setup(e) {
+				const {
+                    locale: t
+                } = Object(g["b"])(),
+                n = i(), {
+                    $t: c
+                } = Object(a["getCurrentInstance"])().proxy;
+				
                 const store = i(),
                       { $t: tStr } = Object(a["getCurrentInstance"])().proxy;
 
@@ -1493,7 +1746,8 @@
                     selectedSlot: null,  // { boxId, matId }
                     boxsInfo: null,
                     socket: null,
-                    messageCenter: null
+                    messageCenter: null,
+					tableData: []
                 });
 				
                 // helper: convert "#rrggbb" -> bool whether text should be dark
@@ -1535,7 +1789,7 @@
 						try {
 							return JSON.parse(raw);
 						} catch (err) {
-							console.log('JSON parse 실패:', raw);
+							console.log('JSON parse failed:', raw);
 							return null;
 						}
 					}
@@ -1553,6 +1807,10 @@
 						if (d.boxsInfo) {
 							fs.boxsInfo = parseBoxsInfo(d.boxsInfo);
 							//console.log('fs.boxsInfo = ',fs.boxsInfo);
+						}
+						else{
+							console.log('this device not has boxsinfo');
+							fs.boxsInfo = null;
 						}
 					} catch (err) {
 						console.log('WS parse error', err);
@@ -1586,22 +1844,43 @@
 					}, 3000);
 				});
 				
-				//console.log('fs.boxsInfo = ',fs.boxsInfo);
-                
+				let prev = !!fs.boxsInfo;
+
+				Object(a["watch"])(() => fs.boxsInfo, (v) => {
+					const now = !!v;
+
+					if (prev === now) return;  // 상태 같으면 무시
+
+					prev = now;
+
+					console.log('상태 바뀜');  // 여기서 니 로직
+					
+					const prev_fs = fs.foldFlag;   // 이전 상태 저장
+
+					//무조건 닫기
+					fs.foldFlag = false;
+
+					Promise.resolve().then(() => {
+						// 이전 상태로 복구 (열려있었으면 다시 열림, 닫혀있었으면 그대로 유지)
+						fs.foldFlag = prev_fs;
+					});
+					
+				});
+				
+				
                 // ── feed / retract ─────────────────────────────────────
                 const sendFeed = dir => {
-                    if (!fs.selectedSlot || !fs.socket) return;
-                    fs.socket.sendMsg({
-                        method: 'set',
-                        params: {
-                            filamentChange: {
-                                boxId: fs.selectedSlot.boxId,
-                                materialId: fs.selectedSlot.matId,
-                                direction: dir  // 1=feed, -1=retract
-                            }
-                        }
-                    });
-                };
+					if (!fs.socket) return;
+
+					const cmd = dir === 1 ? 'LOAD_MATERIAL' : 'QUIT_MATERIAL';
+
+					fs.socket.sendMsg({
+						method: 'set',
+						params: {
+							gcodeCmd: cmd
+						}
+					});
+				};
 
                 const selectSlot = (boxId, matId) => {
                     if (fs.selectedSlot && fs.selectedSlot.boxId === boxId && fs.selectedSlot.matId === matId) {
@@ -1614,13 +1893,12 @@
                 const isSelected = (boxId, matId) =>
                     fs.selectedSlot && fs.selectedSlot.boxId === boxId && fs.selectedSlot.matId === matId;
 
-                const toggleFold = () => { fs.foldFlag = !fs.foldFlag; };
-				
 				//console.log('fs.boxsInfo = ',fs.boxsInfo);
 				//if (!fs.boxsInfo) return null;
 
                 // ── render ────────────────────────────────────────────
                 return (e2, t2) => {
+					
                     const h = Object(a["createVNode"]),
                           cv = Object(a["createVNode"]),
                           ob = Object(a["openBlock"]),
@@ -1632,10 +1910,8 @@
                           rb = Object(a["renderList"]),
                           fra = Object(a["Fragment"]);
 
-                    const boxes = fs.boxsInfo?.materialBoxs;
-					
-					
-					
+                    const boxes = fs.boxsInfo?.materialBoxs || [];
+					console.log(boxes);
                     const hasCFS = boxes.some(b => b.type === 0);
 
                     // Build UI nodes imperatively to stay compatible with minified Vue runtime
@@ -1695,86 +1971,93 @@
 					
                     // Build box columns
                     const boxColumns = [];
+					if (boxes.length === 0) {
+						// 💡 기본 스풀 하나라도 만들어줘야 UI 유지됨
+						boxColumns.push(
+							h('div', { class: 'mainbox' }, [
+							])
+						);
+					} else {
+						boxes.forEach((box, bi) => {
+							const isSpool = box.type === 1;  // external spool holder
+							const isCFS   = box.type === 0;  // CFS multi-slot
 
-                    boxes.forEach((box, bi) => {
-                        const isSpool = box.type === 1;  // external spool holder
-                        const isCFS   = box.type === 0;  // CFS multi-slot
+							const matNodes = [];
 
-                        const matNodes = [];
+							if (isSpool) {
+								// Single spool slot
+								const mat = box.materials && box.materials[0];
+								const color = mat ? normalizeColor(mat.color) : null;
+								const label = mat ? mat.type : '---';
+								const sel = mat && isSelected(box.id, mat.id);
+								
+								matNodes.push(
+									h('div', {
+										class: 'box',
+										'data-v-flt00001': '',
+										onClick: () => mat && selectSlot(box.id, mat.id),
+										style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;cursor:pointer;' : 'cursor:pointer;'
+									}, [
+										// CFS랑 동일 구조
+										h('div', { 'data-v-flt00001': '' }, [
+											h('div', { class: 'title', 'data-v-flt00001': '' }, 'Spool Holder')
+										]),
 
-                        if (isSpool) {
-                            // Single spool slot
-                            const mat = box.materials && box.materials[0];
-                            const color = mat ? normalizeColor(mat.color) : null;
-                            const label = mat ? mat.type : '---';
-                            const sel = mat && isSelected(box.id, mat.id);
-							
-                            matNodes.push(
-								h('div', {
-									class: 'box',
-									'data-v-flt00001': '',
-									onClick: () => mat && selectSlot(box.id, mat.id),
-									style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;cursor:pointer;' : 'cursor:pointer;'
-								}, [
-									// CFS랑 동일 구조
-									h('div', { 'data-v-flt00001': '' }, [
-										h('div', { class: 'title', 'data-v-flt00001': '' }, 'Spool Holder')
-									]),
+										h('div', { class: 'filament', 'data-v-flt00001': '' }, [
+											color ? spoolIcon(color, false, true) : emptySpoolIcon()
+										]),
 
-									h('div', { class: 'filament', 'data-v-flt00001': '' }, [
-										color ? spoolIcon(color, false, true) : emptySpoolIcon()
-									]),
+										h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
 
-									h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
+										h('div', { class: 'filament_type', 'data-v-flt00001': '' }, label),
 
-									h('div', { class: 'filament_type', 'data-v-flt00001': '' }, label),
+										h('div', { class: 'fs-box-label', 'data-v-flt00001': '' },
+											mat && mat.percent != null ? mat.percent + '%' : ''
+										)
+									])
+								);
 
-									h('div', { class: 'fs-box-label', 'data-v-flt00001': '' },
-										mat && mat.percent != null ? mat.percent + '%' : ''
-									)
-								])
-							);
+								boxColumns.push(
+									h('div', { class: 'mainbox', style: 'padding-left:10px;padding-top:10px;padding-right:10px;padding-bottom:15px;', 'data-v-flt00001': '' }, [
+										h('div', { class: 'box_container', 'data-v-flt00001': '' }, matNodes),
+										h('div', { class: 'btnbox', 'data-v-flt00001': '' }),
+										h('div', { class: 'btn', style: 'color:#17cc5f;', 'data-v-flt00001': '' }, null)
+									])
+								);
+								
+							} else if (isCFS) {
+								// CFS multi-slot box
+								const slotNodes = (box.materials || []).map((mat, mi) => {
+									const color = normalizeColor(mat.color);
+									const sel = isSelected(box.id, mat.id);
+									const slotLabel = String.fromCharCode(65 + mi); // A,B,C,D
+									return h('div', { class: 'box', 'data-v-flt00001': '', onClick: () => selectSlot(box.id, mat.id), style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;cursor:pointer;' : 'cursor:pointer;' }, [
+										h('div', { 'data-v-flt00001': '' }, [
+											h('div', { class: 'title', 'data-v-flt00001': '' }, [
+												h('div', { class: 'title' }, `${bi + 1}${slotLabel}`)
+											])
+										]),
+										h('div', { class: 'filament', 'data-v-flt00001': '' }, [ spoolIcon(color, false, false) ]),
+										h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
+										h('div', { class: 'filament_type', 'data-v-flt00001': '' }, mat.type || '---'),
+										h('div', { class: 'fs-box-label', 'data-v-flt00001': '' }, mat.percent != null ? mat.percent + '%' : ''),
+									]);
+								});
 
-                            boxColumns.push(
-                                h('div', { class: 'mainbox', style: 'padding-left:10px;padding-top:10px;padding-right:10px;padding-bottom:10px;', 'data-v-flt00001': '' }, [
-                                    h('div', { class: 'box_container', 'data-v-flt00001': '' }, matNodes),
-                                    h('div', { class: 'btnbox', 'data-v-flt00001': '' }),
-									h('div', { class: 'btn', style: 'color:#17cc5f;', 'data-v-flt00001': '' }, null)
-                                ])
-                            );
-							
-                        } else if (isCFS) {
-                            // CFS multi-slot box
-                            const slotNodes = (box.materials || []).map((mat, mi) => {
-                                const color = normalizeColor(mat.color);
-                                const sel = isSelected(box.id, mat.id);
-                                const slotLabel = String.fromCharCode(65 + mi); // A,B,C,D
-                                return h('div', { class: 'box', 'data-v-flt00001': '', onClick: () => selectSlot(box.id, mat.id), style: sel ? 'outline:1px solid #1e9be2;border-radius:4px;cursor:pointer;' : 'cursor:pointer;' }, [
-                                    h('div', { 'data-v-flt00001': '' }, [
-                                        h('div', { class: 'title', 'data-v-flt00001': '' }, [
-                                            h('div', { class: 'title' }, `${bi + 1}${slotLabel}`)
-                                        ])
-                                    ]),
-                                    h('div', { class: 'filament', 'data-v-flt00001': '' }, [ spoolIcon(color, false, false) ]),
-                                    h('div', { class: 'current_flag', 'data-v-flt00001': '' }),
-                                    h('div', { class: 'filament_type', 'data-v-flt00001': '' }, mat.type || '---'),
-                                    h('div', { class: 'fs-box-label', 'data-v-flt00001': '' }, mat.percent != null ? mat.percent + '%' : ''),
-                                ]);
-                            });
+								// humidity / temp badge
+								const infoStr = (box.humidity != null ? `${box.humidity}RH%` : '') + (box.temp != null ? `  ${box.temp}°C` : '');
 
-                            // humidity / temp badge
-                            const infoStr = (box.humidity != null ? `${box.humidity}RH%` : '') + (box.temp != null ? `  ${box.temp}°C` : '');
-
-                            boxColumns.push(
-                                h('div', { class: 'mainbox', style: 'padding-left:10px;padding-top:10px;padding-right:10px;padding-bottom:5px;', 'data-v-flt00001': '' }, [
-                                    h('div', { class: 'box_container', 'data-v-flt00001': '' }, slotNodes),
-                                    h('div', { class: 'btnbox', 'data-v-flt00001': '' }, [
-                                        infoStr ? h('div', { class: 'btn', style: 'color:#17cc5f;', 'data-v-flt00001': '' }, infoStr) : null
-                                    ])
-                                ])
-                            );
-                        }
-                    });
+								boxColumns.push(
+									h('div', { class: 'mainbox', style: 'padding-left:10px;padding-top:10px;padding-right:10px;padding-bottom:5px;', 'data-v-flt00001': '' }, [
+										h('div', { class: 'box_container', 'data-v-flt00001': '' }, slotNodes),
+										h('div', { class: 'btnbox', 'data-v-flt00001': '' }, [
+											infoStr ? h('div', { class: 'btn', style: 'color:#17cc5f;', 'data-v-flt00001': '' }, infoStr) : null
+										])
+									])
+								);
+							}
+						});
+					}
 					//console.log('materialBoxs ===', fs.boxsInfo.materialBoxs);
 					//console.log(boxColumns[0].appContext);
 					
@@ -1788,43 +2071,78 @@
                     const statusText = selectedMat
                         ? `Selected: ${selectedMat.type} ${normalizeColor(selectedMat.color)}`
                         : 'Select a slot and click the "Feed"/"Retract" button';
+						
+					const toggle = () => {
+						fs.foldFlag = !fs.foldFlag;
+					};
+					
+					
+                    return (ob(), ceb('div', {key: fs.foldFlag,class: Object(a["normalizeClass"])(["comp-FilamentSetting",{ controlAnimal: !fs.foldFlag }]),'data-v-flt00001': ''},
+					[
+                        // Header (공통 컴포넌트 사용)
+						
+						Object(a["createVNode"])(
+							Object(a["unref"])(P),
+							{
+								title: c("filamentsetting.title"),
+								class: "header",
+								icon: ""
+							},
+							{
+								right: Object(a["withCtx"])(() => [
+									h('div', {}, [
+										fs.foldFlag
+											? (ob(), ceb('i', {
+												key: 0,
+												class: 'iconfont',
+												onClick: Object(a["withModifiers"])(toggle, ["stop"])
+											}, ''))
+											: (ob(), ceb('i', {
+												key: 1,
+												class: 'iconfont',
+												onClick: Object(a["withModifiers"])(toggle, ["stop"])
+											}, ''))
+									])
+								]),
+								_: 1
+							}
+						),
 
-                    return (ob(), ceb('div', { class: 'comp-FilamentSetting', 'data-v-flt00001': '' }, [
-                        // Header
-                        h('div', { class: 'fs-header', onClick: toggleFold, 'data-v-flt00001': '' }, [
-                            h('span', { class: 'fs-title', 'data-v-flt00001': '' }, 'Filament Setting'),
-                            h('span', { class: 'fold', 'data-v-flt00001': '' }, [
-                                h('i', { class: nc(['iconfont', fs.foldFlag ? 'icon-a-xingzhuang5' : 'icon-a-xingzhuang6']), 'data-v-flt00001': '' })
-                            ])
-                        ]),
-                        // Body
-                        h('div', {
-                            class: 'fs-body',
-                            style: ns({ height: fs.foldFlag ? 'auto' : '0', overflow: 'hidden' }),
-                            'data-v-flt00001': ''
-                        }, [
-                            // Filament container
-                            h('div', { class: 'filament-container-wrapper', 'data-v-flt00001': '' }, [
-                                h('div', { class: 'filament-wrapper', 'data-v-flt00001': '' }, boxColumns)
-                            ]),
-                            // Buttons
-                            h('div', { class: 'filament-btn', 'data-v-flt00001': '' }, [
-                                h('button', {
-                                    type: 'button',
-                                    class: nc(['el-button el-button--default self_btn', { 'is-disabled': !fs.selectedSlot }]),
-                                    'aria-disabled': String(!fs.selectedSlot),
-                                    disabled: !fs.selectedSlot || undefined,
-                                    onClick: () => sendFeed(1)
-                                }, [ h('span', {}, 'Feed') ]),
-                                h('button', {
-                                    type: 'button',
-                                    class: nc(['el-button el-button--default self_btn', { 'is-disabled': !fs.selectedSlot }]),
-                                    'aria-disabled': String(!fs.selectedSlot),
-                                    disabled: !fs.selectedSlot || undefined,
-                                    onClick: () => sendFeed(-1)
-                                }, [ h('span', {}, 'Retract') ]),
-                            ])
-                        ])
+						// Content
+						Object(a["withDirectives"])(
+							h('div', {
+								class: 'fs-body',
+								'data-v-flt00001': ''
+							}, [
+								h('div', { class: 'filament-container-wrapper', 'data-v-flt00001': '' }, [
+
+									h('div', { class: 'filament-wrapper', 'data-v-flt00001': '' }, boxColumns || []),
+
+									h('div', { class: 'filament-btn', 'data-v-flt00001': '' }, [
+
+										h('button', {
+											type: 'button',
+											class: nc(['el-button el-button--default self_btn']),
+											onClick: () => sendFeed(1)
+										}, [
+											h('span', {}, c("filamentsetting.feed"))
+										]),
+
+										h('button', {
+											type: 'button',
+											class: nc(['el-button el-button--default self_btn']),
+											onClick: () => sendFeed(-1)
+										}, [
+											h('span', {}, c("filamentsetting.retract"))
+										])
+
+									])
+								])
+							]),
+							[
+								[Object(a["vShow"]), fs.foldFlag]
+							]
+						)
                     ]));
 					
 				
@@ -1834,7 +2152,6 @@
 			
         };
 		
-        console.log(FilamentSettingDef);
 		const FilamentSettingComp = FilamentSettingDef;
         // ── end FilamentSetting ──────────────────────────────────────────
 
@@ -1938,6 +2255,11 @@
                 }, {
                     $t: c
                 } = Object(a["getCurrentInstance"])().proxy;
+				
+				const params = new URLSearchParams(window.location.search);
+				const ip = params.get("ip");
+				console.log(' get ip = ',ip);
+
                 let s = Object(a["reactive"])({
                     controlFlag: !0,
                     standInfo: c("printStatus.pause"),
@@ -1948,12 +2270,12 @@
                     TotalLayer: 0,
                     printStatus: -1,
                     statusArr: ["Printing stopped", "Printing", "printing complete", "Printing failed", "print abort", "Printing Paused"],
-                    statusArr1: ["打印已停止", "局域网打印中", "打印完成", "打印失败", "打印中止", "打印暂停"],
+                    statusArr1: ["출력 중지됨","출력 중", "출력 완료","출력 실패","출력 중단", "일시정지됨"],
                     statusTitle: "",
                     fileName: "",
                     socket: null,
                     foldFlag: !0,
-                    ip: "",
+                    ip: ip,
                     moreInfo: [{
                             showInfo: c("printStatus.printTime"),
                             resultInfo: "",
@@ -1973,6 +2295,8 @@
                         }
                     ]
                 });
+				
+				console.log('s.printStatus = ',s.printStatus);
                 Object(a["watch"])(() => t.value, () => {
                     console.log("status", t.value),
                     s.moreInfo[0].showInfo = c("printStatus.printTime"),
@@ -1985,8 +2309,15 @@
                         state: e,
                         printProgress: n
                     } = o;
-                    s.printStatus = e,
-                    "en" == t.value && (console.log("check EN", s.statusArr[s.printStatus]), s.statusTitle = s.statusArr[s.printStatus]),
+                    s.printStatus = e;
+
+					if (t.value === "en") {
+						console.log("check EN", s.statusArr[s.printStatus]);
+						s.statusTitle = s.statusArr[s.printStatus];
+					} else if (t.value === "zh") {
+						console.log("check ZH", s.statusArr1[s.printStatus]);
+						s.statusTitle = s.statusArr1[s.printStatus];
+					}
                     s.printProgress = n,
                     s.layer = o.layer,
                     s.TotalLayer = o.TotalLayer,
@@ -2017,8 +2348,8 @@
                         method: "HEAD"
                     }).then(e => {
                         if (e.ok)
-                            return console.log("资源是有效的"), s.effective = !0, !0; {
-                            console.log("资源是无效的"),
+                            return console.log("resources are available"), s.effective = !0, !0; {
+                            console.log("The resources are invalid."),
                             s.effective = !1;
                             const e = n("882d");
                             return s.gcodePriview = e,
@@ -2026,10 +2357,17 @@
                         }
                     }).catch(e => (console.error("Error:", e), !1))
                 };
-                Object(a["watch"])(() => s.printStatus, () => {
-                    s.gcodePriview = `http://${s.ip}:80/downloads/original/current_print_image.png\n?date=${new Date}`,
-                    l(s.gcodePriview)
-                });
+				
+				console.log(' get s.ip = ',s.ip);
+				const thumbnamil_ip = s.ip;
+				const ts = Date.now();
+				
+                Object(a["watch"])(() => thumbnamil_ip, (ip) => {
+					if (!ip) return;
+
+					s.gcodePriview = `http://${ip}:8555/downloads/original/current_print_image.png?date=${Date.now()}`;
+					l(s.gcodePriview);
+				}, { immediate: true });
                 const d = Object(a["ref"])(!1),
                 p = Object(a["ref"])(""),
                 u = Object(a["ref"])("");
@@ -2211,7 +2549,7 @@
                                                             src: Object(a["unref"])(s).gcodePriview,
                                                             alt: Object(a["unref"])(c)("printStatus.gcodePre"),
                                                             srcset: ""
-                                                        }, null, 12, Pe), Ve]), Object(a["createElementVNode"])("div", Ae, [Object(a["createElementVNode"])("div", Re, [De, Object(a["createElementVNode"])("span", qe, Object(a["toDisplayString"])(Object(a["unref"])(s).fileName), 1)]), Object(a["createElementVNode"])("div", Ue, [Ze, Object(a["createElementVNode"])("span", He, Object(a["toDisplayString"])(Object(a["unref"])(s).layer) + " / " + Object(a["toDisplayString"])(Object(a["unref"])(s).TotalLayer), 1)]), 1 === Object(a["unref"])(s).printStatus || 5 === Object(a["unref"])(s).printStatus ? (Object(a["openBlock"])(), Object(a["createElementBlock"])("div", We, [Le, Object(a["createElementVNode"])("div", Xe, [Object(a["createVNode"])(r, {
+                                                        }, null, 12, Pe), Ve]), Object(a["createElementVNode"])("div", Ae, [Object(a["createElementVNode"])("div", Re, [Object(a["createElementVNode"])("span", { class: "span1" }, Object(a["toDisplayString"])(Object(a["unref"])(c)("FileManage.file")), 1), Object(a["createElementVNode"])("span", qe, Object(a["toDisplayString"])(Object(a["unref"])(s).fileName), 1)]), Object(a["createElementVNode"])("div", Ue, [Object(a["createElementVNode"])("span", { class: "span1" }, Object(a["toDisplayString"])(Object(a["unref"])(c)("FileManage.layer")), 1), Object(a["createElementVNode"])("span", He, Object(a["toDisplayString"])(Object(a["unref"])(s).layer) + " / " + Object(a["toDisplayString"])(Object(a["unref"])(s).TotalLayer), 1)]), 1 === Object(a["unref"])(s).printStatus || 5 === Object(a["unref"])(s).printStatus ? (Object(a["openBlock"])(), Object(a["createElementBlock"])("div", We, [Le, Object(a["createElementVNode"])("div", Xe, [Object(a["createVNode"])(r, {
                                                                                 percentage: Object(a["unref"])(s).printProgress
                                                                             }, null, 8, ["percentage"])])])) : Object(a["createCommentVNode"])("", !0)])]), Ye, Object(a["createElementVNode"])("div", $e, [Object(a["createElementVNode"])("ul", Ge, [(Object(a["openBlock"])(!0), Object(a["createElementBlock"])(a["Fragment"], null, Object(a["renderList"])(Object(a["unref"])(s).moreInfo, (e, t) => (Object(a["openBlock"])(), Object(a["createElementBlock"])("li", {
                                                                             key: t
@@ -2277,9 +2615,9 @@
             n = 0,
             a = 0;
             t > 60 && (n = parseInt(t / 60), t = parseInt(t % 60), n > 60 && (a = parseInt(n / 60), n = parseInt(n % 60)));
-            let o = parseInt(t) + "秒";
-            return n > 0 && (o = parseInt(n) + "分" + o),
-            a > 0 && (o = parseInt(a) + "小时" + o),
+            let o = parseInt(t) + "S";
+            return n > 0 && (o = parseInt(n) + "M" + o),
+            a > 0 && (o = parseInt(a) + "H" + o),
             console.log("result：", o),
             o
         }
@@ -3784,7 +4122,7 @@
                                             d.pollingMessagesXYZ = null
                                         }, 3e3)
                                     }
-                                    switch (console.log("item.clickAction是啥呀", e.clickAction), e.clickAction) {
+                                    switch (console.log("What is item.clickAction", e.clickAction), e.clickAction) {
                                     case Yt.homeXY:
                                         d.socket.sendMsg({
                                             method: "set",
@@ -3850,7 +4188,7 @@
                                         });
                                         break;
                                     case Yt.addY:
-                                        console.log("Y加++++++++", d.moveUnits),
+                                        console.log("Y ++++++++", d.moveUnits),
                                         d.socket.sendMsg({
                                             method: "set",
                                             params: {
@@ -4108,7 +4446,7 @@
         var _n = {
             __name: "index",
             setup(e) {
-                return (e, t) => (Object(a["openBlock"])(), Object(a["createElementBlock"])("div", kn, [Object(a["createElementVNode"])("div", Mn, [Object(a["createVNode"])(et), Object(a["createVNode"])(Object(a["unref"])(yn)), Object(a["createVNode"])(FilamentSettingComp), Object(a["createVNode"])(Pt), Object(a["createVNode"])(re)]), Object(a["createElementVNode"])("div", Cn, [Object(a["createVNode"])(Xt), Object(a["createVNode"])(ft), Object(a["createVNode"])(xe)])]))
+                return (e, t) => (Object(a["openBlock"])(), Object(a["createElementBlock"])("div", kn, [Object(a["createElementVNode"])("div", Mn, [Object(a["createVNode"])(et), Object(a["createVNode"])(Object(a["unref"])(yn)), Object(a["createVNode"])(FilamentSettingComp), Object(a["createVNode"])(Pt), Object(a["createVNode"])(re)]), Object(a["createElementVNode"])("div", Cn, [Object(a["createVNode"])(Xt), Object(a["createVNode"])(ft), Object(a["createVNode"])(xe), Object(a["createVNode"])(Level2DTableComp)])]))
             }
         };
         n("2437");
@@ -4154,282 +4492,291 @@
         var Jn = Pn,
         Qn = {
             configuration: {
-                sureThat: "确认",
-                resetIt: "重启",
-                sureInfo: "确定",
-                cancel: "取消",
-                closeWarn: "websocket服务处于关闭状态!",
-                guiweiPrint: "请先归位打印机!",
-                allIt: "全部",
-                assetDi: "设备到底啦!",
-                crealityPrint: "创想打印",
-                resetFuwu: "确定重启当前服务?",
-                Tips: "提示",
-                resetSuccess: "重启成功!",
-                quxiao: "已取消",
-                paichuSuccess: "排除对象成功!",
-                surePaichu: "是否要排除选中模型?",
-                paichuObject: "排除对象",
-                paichuguol: "此对象已排除!"
-            },
-            FileManage: {
-                insert: "导入",
-                files: "文件",
-                fileName: "文件名称",
-                fileSize: "文件大小",
-                layerHeight: "层高",
-                time: "时间",
-                hcLehgth: "耗材长度",
-                name: "名称",
-                status: "状态",
-                noFinish: "未完成",
-                finish: "完成",
-                startTime: "开始时间",
-                endTime: "结束时间",
-                allTime: "总时长",
-                size: "大小",
-                historyRecord: "历史记录",
-                startPrint: "开始打印",
-                deleteFile: "删除文件",
-                deleteSuccess: "删除成功!",
-                calcelDelete: "取消删除",
-                newName: "重命名",
-                inputFilename: "请输入文件名",
-                fileNameNull: "文件名不能为空!",
-                newNameScuess: "重命名成功!",
-                newNameCancel: "重命名取消",
-                sureDelete: "你确定删除该文件吗?",
-                homeTips: "请您先归位打印机,再进行开始打印操作!",
-                gcodeSilceTips: "请导入Gcode切片文件!",
-                samePrinting: "该文件正在打印中，请打印完成后再导入",
-                insertSuccess: "导入成功",
-                uploadFailed: "导入失败"
-            },
-            moveControl: {
-                infoControl: "运动控制",
-                printSpeed: "打印速度: ",
-                windSpeed: "风速",
-                modelFengshan: "模型风扇",
-                qiangtiFengshan: "机箱风扇",
-                fuzhuFengshan: "辅助风扇",
-                lFengshan: "LED灯开关",
-                haomi: "毫米",
-                jichuDistence: "挤出距离",
-                jichuSpeed: "挤出速度",
-                haomiMiao: "毫米 / 秒",
-                printWarning: "打印中状态不允许机器操作",
-                shuruMubiao: "请重新输入目标值!"
-            },
-            printStatus: {
-                pause: "暂停",
-                goOn: "继续",
-                off: "终止",
-                cancel: "取消",
-                gcodePre: "gcode预览图",
-                printTime: "打印时间: ",
-                lastTime: "剩余时间: ",
-                printPause: "打印停止",
-                printing: "局域网打印中",
-                printOver: "打印完成",
-                printFail: "打印失败",
-                printOvers: "打印中止",
-                printStay: "打印暂停",
-                notTestMaterial: "未检测到耗材",
-                stopUnexpect: "检测到上次意外停止的文件"
-            },
-            cameraModule: {
-                cameraShow: "摄像头显示",
-                pleaseCheck: "请您检查",
-                printAsset: "打印机摄像设备是否正常工作"
-            },
-            temperatureControl: {
-                temp: "温度",
-                progrems: "项目",
-                nows: "当前",
-                goals: "目标",
-                penzui: "喷嘴",
-                hotBed: "热床",
-                temFanwei: "温度范围不合理"
-            },
-            wangchuang: {
-                name: "网床",
-                delete : "清除床网数据",
-                showBed: "显示热床水平面"
-            },
+				sureThat: "확인",
+				resetIt: "재부팅",
+				sureInfo: "확인",
+				cancel: "취소",
+				closeWarn: "웹소켓 서비스가 종료되었습니다!",
+				guiweiPrint: "먼저 프린터를 리셋해주세요!",
+				allIt: "전체",
+				assetDi: "장치가 범위를 벗어났습니다!",
+				crealityPrint: "Creality Print",
+				resetFuwu: "현재 기기를 재부팅 하시겠습니까?",
+				Tips: "알림",
+				resetSuccess: "재부팅 성공!",
+				quxiao: "취소됨",
+				paichuSuccess: "제외 성공!",
+				surePaichu: "선택한 모델을 제외하시겠습니까?",
+				paichuObject: "객체 제외",
+				paichuguol: "해당 객체가 제외되었습니다!"
+			},
+			FileManage: {
+				file: "파일명: ",
+				layer: "레이어: ",
+				insert: "업로드",
+				files: "파일",
+				fileName: "파일 이름",
+				fileSize: "파일 크기",
+				layerHeight: "레이어",
+				time: "시간",
+				hcLehgth: "사용량",
+				name: "이름",
+				status: "상태",
+				noFinish: "미완료",
+				finish: "완료",
+				startTime: "시작 시간",
+				endTime: "종료 시간",
+				allTime: "총 소요 시간",
+				size: "크기",
+				historyRecord: "기록",
+				startPrint: "출력 시작",
+				deleteFile: "파일 삭제",
+				deleteSuccess: "삭제 성공!",
+				calcelDelete: "삭제 취소",
+				newName: "이름 변경",
+				inputFilename: "파일 이름을 입력하세요",
+				fileNameNull: "파일 이름은 비어 있을 수 없습니다!",
+				newNameScuess: "이름 변경 성공!",
+				newNameCancel: "이름 변경 취소",
+				sureDelete: "이 파일을 삭제하시겠습니까?",
+				homeTips: "출력을 시작하기 전에 프린터를 홈 위치로 이동하세요!",
+				gcodeSilceTips: "Gcode 파일을 불러와 주세요!",
+				samePrinting: "현재 출력 중입니다. 출력 완료 후 불러오세요",
+				insertSuccess: "업로드 성공",
+				uploadFailed: "업로드 실패"
+			},
+			moveControl: {
+				infoControl: "제어",
+				printSpeed: "출력 속도: ",
+				windSpeed: "팬 속도",
+				modelFengshan: "모델 팬",
+				qiangtiFengshan: "후면 팬",
+				fuzhuFengshan: "측면 팬",
+				lFengshan: "LED 조명",
+				haomi: "밀리미터",
+				jichuDistence: "압출 거리",
+				jichuSpeed: "압출 속도",
+				haomiMiao: "mm/초",
+				printWarning: "출력 중에는 기기 조작이 불가능합니다!",
+				shuruMubiao: "목표 값을 다시 입력하세요!"
+			},
+			printStatus: {
+				pause: "일시정지",
+				goOn: "재개",
+				off: "정지",
+				cancel: "취소",
+				gcodePre: "Gcode 미리보기 이미지",
+				printTime: "출력 시간: ",
+				lastTime: "남은 시간: ",
+				printPause: "출력 중지됨",
+				printing: "출력 중",
+				printOver: "출력 완료",
+				printFail: "출력 실패",
+				printOvers: "출력 중단",
+				printStay: "일시정지됨",
+				notTestMaterial: "재료 감지 안됨",
+				stopUnexpect: "이전에 비정상 종료된 파일 감지"
+			},
+			cameraModule: {
+				cameraShow: "모니터링",
+				pleaseCheck: "확인하세요",
+				printAsset: "프린터 카메라 장치가 정상 작동하는지 확인하세요."
+			},
+			temperatureControl: {
+				temp: "온도",
+				progrems: "항목",
+				nows: "현재",
+				goals: "목표",
+				penzui: "노즐",
+				hotBed: "히트베드",
+				temFanwei: "온도 범위가 올바르지 않습니다"
+			},
+			wangchuang: {
+				name: "베드 메쉬",
+				delete: "베드 메쉬 데이터 삭제",
+				showBed: "베드 레벨 표시"
+			},
+			filamentsetting:{
+				title: "필라멘트 설정",
+				feed: "삽입",
+				retract: "배출",
+			},
             errorMessage: {
-                printNoReady: "打印机未就绪、Klippy主机正在尝试连接、请稍后重试!",
-                chuanganqi: "BLTouch验证传感器状态失败!",
-                paramsNOuse: "display_template的参数无效",
-                weizhizu: "未知的display_data组 ",
-                wuxiaozi: "无效的字形行在",
-                zixing: "字形",
-                buzhengque: "不正确的行",
-                bufenmingc: "部分名称",
-                wuxiao: "无效",
-                yinjiao: "hd44780 所有引脚必须在同一个MCU上",
-                chouxiang: "抽象的MenuContainer不能直接实例化",
-                caidanxiang: "菜单项",
-                bujieshou: "不被接受!",
-                wrongType: "错误的类型,应该是MenuContainer",
-                select: "选项",
-                myChose: "的选择",
-                notUseSelect: "不是一个有效的选择",
-                weizhicai: "未知的菜单项",
-                wujiexi: "无法解析encoder_pins",
-                tongMcu: "spi引脚必须在同一个MCU上",
-                ceshizhi: "没有找到adxl345的测量值",
-                wanggewai: "bed_mesh: 错误， fade_target 位于网格Z范围之外\n最小值",
-                zuidazhi: "最大值:",
-                zuixiaozhi: "最小值",
-                fade_target: "fade_target:",
-                wangge2: "bed_mesh: 网格超出fade范围, 请参考example-extras.cfg的fade_start和fade_end 选项。fade 距离: ",
-                wanggexiao: "网格最小值：",
-                wanggezuida: "网格最大值：",
-                wanggeshuiping: "网格水平调整：拆分移动时出错",
-                dicengtan: "床层尚未探测",
-                meijiazai: "没有加载到偏移的网格",
-                shengzuobiao: "bed_mesh:无法生成坐标 对于索引处的故障区域。",
-                sancicacao: "bed_mesh: 检测到探头计数小于4个点的双三次插值。强制拉格朗日插值。配置的探测器计数：",
-                bupipei: "bed_mesh: 点不匹配, orig = (",
-                probed: "), probed = ",
-                ycontrol: "bed_mesh: 查找y控制点时出错",
-                guiling: "先归零:",
-                chaofanwei: "超出范围: [",
-                yidongchang: "仅挤出移动过长（",
-                mmvs: "mm vs",
-                xiangxinxi: "\n有关详细信息，请参阅“max_extrude_only_distance”配置选项`",
-                jiemianxuanx: "截面床网中的选项",
-                bixuyou: "必须至少有",
-                dezuida: "的最大值必须为",
-                fenxican: "无法分析参数",
-                canshu: "参数",
-                dezuixiaob: "的最小值必须为",
-                dezuidab: "的最大值必须为",
-                shangcuo: "上的错误",
-                shangcuo1: "上的错误：缺少",
-                shangcuo2: "上的错误：必须有",
-                bidayu: "必须大于",
-                bixiaoyu: "必须小于",
-                weizhimeib: "警告：位置没有变化（达到步进分辨率）",
-                tanshibai: "手动探测失败！在运行ACCEPT之前，使用TESTZ命令定位喷嘴。",
-                xunidian: "探测虚拟终点仅用作终点pin",
-                duanzhidian: "无法上拉/反转探针虚拟端止点",
-                yidongpenzui: "探测停用gcode脚本期间移动的喷嘴",
-                deltadayin: "Delta calibrate仅适用于Delta打印机",
-                celiangzhi: "并非所有测量值都提供",
-                jibenjioazhun: "必须首先使用DELTA_CALIBRATE运行基本校准",
-                bixuyou1: "必须有",
-                gezhi: "个值",
-                jiaozhunW: "未知校准操作",
-                dostaryun: "Dotstar引脚必须位于同一个mcu上",
-                tongjixin: "步进器的统计信息不可用",
-                bujinqi: "未找到步进器。（确保至少归零一次。）",
-                weizhiHong: "未知gcode宏变量",
-                wufajiang: "无法将",
-                wenzixi: "作为文字进行分析",
-                zhidingbian: "已指定G-Code移动变换",
-                zhongsuwuxiao: "中的速度无效",
-                wufafenxi: "无法分析移动",
-                weizhig: "未知的gcode状态:",
-                fenwuxiao: "HTU21D分辨率无效。有效值为",
-                replicape: "replicape不支持Pin类型",
-                jingtaiyin: "静态引脚不能有关机值",
-                fanzhuanyin: "无法反转Replicape虚拟启用引脚",
-                pwnxin: "Replicape无法确定pwm芯片",
-                weizhipin: "未知的replicape pin ",
-                offetxiao: "touch上的错误：必须有z_offset最小值",
-                jiuzheng: "\n一旦基本问题得到纠正，请使用“重新启动”\n命令重新加载配置并重新启动主机软件。\n打印机已停止",
-                wufenxi: "无法分析选项",
-                weizhunbei: "打印机未准备",
-                bianliangwen: "无法分析现有变量文件",
-                baobianl: "无法保存变量",
-                mcngui: "多mcu共享轴上不支持多mcu归位",
-                jingyin: "静态引脚不能有关机值",
-                guanjizhi: "具有最大持续时间的引脚的起始值必须等于关机值",
-                chishida: "数字pin最大持续时间过大",
-                ruanpwn: "软pwm上的停机值必须为0.0或1.0",
-                zhouqida: "PWM引脚周期时间过大",
-                zhouqidad: "PWM周期时间过大",
-                wait: "等待",
-                xiangyingcao: "响应超时",
-                chongqimcm: "尝试重新启动MCU",
-                fail: "失败",
-                mcu: "MCU",
-                CRCpei: "CRC与配置不匹配",
-                cajiao: "插脚",
-                feiMcu: "不是mcu",
-                chajiaom: "上的有效插脚名称",
-                gengMcn: "无法更新MCU",
-                peizhi: "配置,因为它已关闭",
-                wupeiM: "无法配置MCU",
-                peiqiM: "配置期间MCU",
-                chucuo1: "出错: ",
-                zipeishi: "MCU自动重置失败",
-                keyishao: "MCU上可用的移动太少",
-                buzhiyin: "mcu不支持引脚类型",
-                zhougewu: "轴的格式无效",
-                wufenzhou: "无法分析轴方向",
-                buzhishu: "不支持的输出",
-                jinreson: ",仅支持resonances和raw_data",
-                weizhishu: "未指定输出，必须在输出参数中设置至少一个resonances和raw_data",
-                zhoujiashu: "-轴加速计未测量到数据",
-                xiangleiy: "响应类型",
-                wuxiaob: "无效。必须是“echo”、“command”或“error”之一",
-                bixuz: "必须在mcu",
-                shangzhid: "上指定",
-                weizhi: "未知",
-                yuanjisuan: "远程计算出错：",
-                chujiashu: "处理加速计数据",
-                shineicuo: "时出现内部错误",
-                xiewenj: "写入文件",
-                shicucuo: "时出错：",
-                pingst: "skew_correction：平面[",
-                tiaomug: "]的条目格式不正确\n",
-                lengduanfan: "Max31856：冷端范围故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                reoufan: "Max31856：热电偶范围故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                lengduangao: "Max31856：冷端高故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                lengduandi: "Max31856：冷端低故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                reougao: "Max31856：热电偶高故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                reouDi: "Max31856：热电偶低故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                guodianya: "Max31856：过电压/欠电压故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                reoukailu: "Max31856：热电偶开路故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                kailu: "Max31855：开路故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                duididuan: "Max31855：对地短路,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                vcduan: "Max31855：对Vcc短路,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                sheIDw: "Max6675：设备ID错误,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                redianoukai: "Max6675：热电偶开路故障,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                shuruduan: "Max31865 RTD输入断开,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                rtdduanlu: "Max31865 RTD输入短路,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                daqiagkai: "Max31865 VREF-大于0.85*VBIAS，强制-打开,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                xiaoqiangkai: "`Max31865 VREF-小于0.85*VBIAS，强制-打开,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                weizhid: "Max31865未指定错误,一旦基本问题得到纠正，请使用“FIRMWARE_RESTART”命令重置固件，重新加载配置，然后重新启动主机软件。打印机已关闭",
-                xuanxiang: "选项",
-                zaijie: "在节",
-                bixudi: "是必须的",
-                baojietou: "该文件不包含节头。",
-                jiuzhengwen: " \n纠正基础问题后，使用“RESTART”\n命令重新加载配置并重新启动主机软件。\n打印机停止",
-                wenjianjie: "文件包含解析错误：",
-                chongjiapei: "\n纠正基础问题后，使用“RESTART”\n命令重新加载配置并重新启动主机软件。\n打印机停止",
-                dianjiyi: "电机驱动异常",
-                neibvucuo: "内部错误",
-                tongxunyi: "通讯异常",
-                yuqijia: "未按预期加热",
-                rechuangyi: "热床温度异常",
-                jichuyi: "挤出机异常",
-                dayinyi: "打印文件坐标异常",
-                dayinzhi: "检测到打印质量问题并暂停打印",
-                weizhicuo: "检测到打印发生未知错误",
-                wenqiangyi: "温腔温度异常",
-                dayinwenyi: "打印文件坐标异常",
-                zhenwenyou: "振纹优化传感器异常",
-                fenshanyi: "风扇异常",
-                wangluoyi: "网络异常",
-                dayinzhi1: "检测到打印质量问题",
-                ztouchyi: "检测到z-Touch异常，请重试",
-                wenfuyi: "文件复制异常，请重试",
-                weizhiyi: "未知异常",
-                yidongcuo: "移动轴错误",
-                dayinjiuyu: "打印机未就绪、Klippy主机正在尝试连接、请稍后重试"
+				printNoReady: "프린터가 준비되지 않았습니다. Klippy 호스트가 연결 중입니다. 잠시 후 다시 시도하세요.",
+				chuanganqi: "BLTouch 센서 상태 확인 실패!",
+				paramsNOuse: "display_template 파라미터가 잘못되었습니다",
+				weizhizu: "알 수 없는 display_data 그룹",
+				wuxiaozi: "잘못된 문자가 포함된 라인:",
+				zixing: "문자",
+				buzhengque: "잘못된 라인",
+				bufenmingc: "파트 이름",
+				wuxiao: "유효하지 않음",
+				yinjiao: "hd44780의 모든 핀은 동일한 MCU에 있어야 합니다",
+				chouxiang: "MenuContainer는 직접 생성할 수 없습니다",
+				caidanxiang: "메뉴 항목",
+				bujieshou: "허용되지 않음!",
+				wrongType: "잘못된 타입, MenuContainer여야 합니다",
+				select: "옵션",
+				myChose: "선택",
+				notUseSelect: "유효하지 않은 선택입니다",
+				weizhicai: "알 수 없는 메뉴 항목",
+				wujiexi: "encoder_pins를 분석할 수 없습니다",
+				tongMcu: "SPI 핀은 동일한 MCU에 있어야 합니다",
+				ceshizhi: "adxl345 측정값을 찾을 수 없습니다",
+				wanggewai: "bed_mesh 오류: fade_target이 Z 범위를 벗어났습니다. 최소값:",
+				zuidazhi: "최대값:",
+				zuixiaozhi: "최소값",
+				fade_target: "fade_target:",
+				wangge2: "bed_mesh 오류: 메쉬가 fade 범위를 벗어났습니다. fade_start와 fade_end 설정을 확인하세요. 거리:",
+				wanggexiao: "그리드 최소값:",
+				wanggezuida: "그리드 최대값:",
+				wanggeshuiping: "그리드 수평 보정 중 오류 발생",
+				dicengtan: "베드가 감지되지 않았습니다",
+				meijiazai: "메쉬가 로드되지 않았습니다",
+				shengzuobiao: "bed_mesh: 손상된 영역 좌표 생성 실패",
+				sancicacao: "프로브 포인트가 4개 미만이어서 보간 방식이 변경되었습니다",
+				bupipei: "bed_mesh: 포인트 불일치",
+				probed: "측정값:",
+				ycontrol: "bed_mesh: y 제어 포인트 오류",
+				guiling: "먼저 홈(0점) 이동 필요:",
+				Chaofanwei: "범위 초과:",
+				yidongchang: "압출 이동 거리 초과:",
+				mmvs: "mm vs",
+				xiangxinxi: "\nmax_extrude_only_distance 설정을 확인하세요",
+				jiemianxuanx: "베드 메쉬 옵션",
+				bixuyou: "최소 필요 개수:",
+				dezuida: "최대값은 다음과 같아야 합니다",
+				fenxican: "파라미터 분석 실패",
+				canshu: "파라미터",
+				dezuixiaob: "최소값은 다음과 같아야 합니다",
+				dezuidab: "최대값은 다음과 같아야 합니다",
+				shangcuo: "오류",
+				shangcuo1: "오류: 누락됨",
+				shangcuo2: "오류: 다음을 포함해야 함",
+				bidayu: "보다 커야 합니다",
+				bixiaoyu: "보다 작아야 합니다",
+				weizhimeib: "경고: 위치 변화 없음 (스텝 해상도 제한)",
+				tanshibai: "수동 프로빙 실패! TESTZ로 위치 조정 후 ACCEPT 실행",
+				xunidian: "가상 프로브는 엔드스톱으로만 사용됩니다",
+				duanzhidian: "가상 엔드스톱 설정 실패",
+				yidongpenzui: "G-code 비활성화 중 노즐 이동 감지됨",
+				deltadayin: "Delta 보정은 Delta 프린터에서만 가능합니다",
+				celiangzhi: "측정값이 부족합니다",
+				jibenjioazhun: "DELTA_CALIBRATE 먼저 실행해야 합니다",
+				bixuyou1: "필수 값",
+				gezhi: "값 필요",
+				jiaozhunW: "알 수 없는 보정 작업",
+				dostaryun: "Dotstar 핀은 동일 MCU에 있어야 합니다",
+				tongjixin: "스테퍼 통계 사용 불가",
+				bujinqi: "스테퍼 없음 (한 번 이상 홈 필요)",
+				weizhiHong: "알 수 없는 gcode 변수",
+				wufajiang: "전송 실패",
+				wenzixi: "텍스트로 분석",
+				zhidingbian: "G-Code 변환이 이미 지정됨",
+				zhongsuwuxiao: "속도 값이 잘못되었습니다",
+				wufafenxi: "이동 분석 실패",
+				weizhig: "알 수 없는 gcode 상태",
+				fenwuxiao: "HTU21D 해상도 값이 잘못됨",
+				replicape: "Replicape는 해당 핀 타입을 지원하지 않음",
+				jingtaiyin: "정적 핀은 비활성화할 수 없습니다",
+				fanzhuanyin: "Replicape 핀 반전 불가",
+				pwnxin: "PWM 칩 인식 실패",
+				weizhipin: "알 수 없는 핀",
+				offetxiao: "z_offset 최소값 오류",
+				jiuzheng: "문제 해결 후 'reboot' 명령으로 재시작하세요. 프린터 중지됨",
+				wufenxi: "옵션 분석 실패",
+				weizhunbei: "프린터 준비되지 않음",
+				bianliangwen: "변수 파일 분석 실패",
+				baobianl: "변수 저장 실패",
+				mcngui: "멀티 MCU에서 공유 축 홈 지원 안됨",
+				guanjizhi: "핀 시작값과 종료값이 동일해야 함",
+				chishida: "핀 최대 지속시간이 너무 큼",
+				ruanpwn: "소프트 PWM 종료값은 0.0 또는 1.0이어야 함",
+				zhouqida: "PWM 주기가 너무 큼",
+				wait: "대기 중",
+				xiangyingcao: "응답 시간 초과",
+				chongqimcm: "MCU 재시작 시도",
+				fail: "실패",
+				mcu: "MCU",
+				CRCpei: "CRC 설정 불일치",
+				cajiao: "핀",
+				feiMcu: "MCU 아님",
+				gengMcn: "MCU 업데이트 실패",
+				wupeiM: "MCU 설정 실패",
+				peiqiM: "MCU 설정 중 오류",
+				chucuo1: "오류:",
+				zipeishi: "MCU 자동 재시작 실패",
+				keyishao: "MCU 처리 가능한 동작 부족",
+				buzhiyin: "지원되지 않는 핀 타입",
+				zhougewu: "축 형식 오류",
+				wufenzhou: "축 방향 분석 실패",
+				buzhishu: "지원되지 않는 출력",
+				jinreson: "resonances 또는 raw_data만 지원",
+                weizhishu: "출력이 지정되지 않았습니다. output 파라미터에 resonances 또는 raw_data 중 하나 이상을 설정해야 합니다",
+				zhoujiashu: "-축 가속도계에서 측정된 데이터가 없습니다",
+				xiangleiy: "응답 타입",
+				wuxiaob: "유효하지 않음. echo, command 또는 error 중 하나여야 합니다",
+				bixuz: "MCU에 설정되어야 합니다",
+				shangzhid: "상위 지정",
+				Weizhi: "알 수 없음",
+				yuanjisuan: "원격 계산 오류:",
+				chujiashu: "가속도계 데이터 처리",
+				shineicuo: "내부 오류 발생",
+				xiewenj: "파일로 저장",
+				shicucuo: "오류 발생:",
+				pingst: "skew_correction: plane[",
+				tiaomug: "] 항목 형식이 잘못되었습니다\n",
+
+				lengduanfan: "Max31856: 냉접점 범위 오류. 문제를 해결한 후 'FIRMWARE_RESTART' 명령으로 펌웨어를 재시작하세요. 프린터가 중지되었습니다",
+				reoufan: "Max31856: 열전대 범위 오류. 문제 해결 후 'FIRMWARE_RESTART'로 재시작하세요. 프린터가 중지되었습니다",
+				lengduangao: "Max31856: 냉접점 온도 과다. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 전원 꺼짐",
+				lengthduandi: "Max31856: 냉접점 온도 부족. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 전원 꺼짐",
+				reougao: "Max31856: 열전대 온도 과다. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				reouDi: "Max31856: 열전대 온도 부족. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				guodianya: "Max31856: 과전압/저전압 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				reoukailu: "Max31856: 열전대 단선 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+
+				kailu: "Max31855: 회로 단선 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				duididuan: "Max31855: 접지 단락 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				vcduan: "Max31855: Vcc 단락 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+
+				sheIDw: "Max6675: 장치 ID 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				redianoukai: "Max6675: 열전대 단선 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+
+				Shuruduan: "Max31865: RTD 입력 단선. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 전원 꺼짐",
+				rtdduanlu: "Max31865: RTD 입력 단락. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+				daqiagkai: "Max31865: VREF 과다 (0.85*VBIAS 초과). 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 전원 꺼짐",
+				xiaoqiangkai: "Max31865: VREF 부족 (0.85*VBIAS 미만). 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 전원 꺼짐",
+				weizhid: "Max31865: 알 수 없는 오류. 문제 해결 후 'FIRMWARE_RESTART' 실행. 프린터 중지됨",
+
+				xuanxiang: "옵션",
+				zaijie: "진행 중",
+				bixudi: "필수 항목입니다",
+				baojietou: "이 파일에는 섹션 헤더가 없습니다",
+				jiuzhengwen: "\n문제 해결 후 RESTART 명령으로 설정을 다시 로드하고 호스트를 재시작하세요.\n프린터 중지됨",
+				wenjianjie: "파일 파싱 오류:",
+				chongjiapei: "\n문제 해결 후 RESTART 명령으로 설정을 다시 로드하세요.\n프린터 중지됨",
+
+				dianjiyi: "모터 드라이버 이상",
+				neibvucuo: "내부 오류",
+				tongxunyi: "통신 오류",
+				yuqijia: "예상대로 가열되지 않음",
+				rechuangyi: "히트베드 온도 이상",
+				jichuyi: "익스트루더 이상",
+				dayinyi: "출력 파일 좌표 이상",
+				dayinzhi: "출력 품질 문제 감지로 일시정지됨",
+				weizhicuo: "알 수 없는 출력 오류",
+				wenqiangyi: "챔버 온도 이상",
+				dayinwenyi: "출력 파일 좌표 이상",
+				zhenwenyou: "진동 보정 센서 이상",
+				fenshanyi: "팬 이상",
+				wangluoyi: "네트워크 오류",
+				dayinzhi1: "출력 품질 문제 감지",
+				ztouchyi: "Z-Touch 오류 발생, 다시 시도하세요",
+				wenfuyi: "파일 복사 오류, 다시 시도하세요",
+				weizhiyi: "알 수 없는 오류",
+				yidongcuo: "축 이동 오류",
+				dayinjiuyu: "프린터가 준비되지 않았습니다. Klippy가 연결 중입니다. 잠시 후 다시 시도하세요"
             }
         },
         Kn = {
@@ -4453,6 +4800,8 @@
                 paichuguol: "This object is excluded!"
             },
             FileManage: {
+				file: "File: ",
+				layer: "Layer: ",
                 insert: "Import",
                 files: "File",
                 fileName: "File Name",
@@ -4536,6 +4885,11 @@
                 delete : "Clear bednet data",
                 showBed: "Show bed level"
             },
+			filamentsetting:{
+				title: "Filament Setting",
+				feed: "Feed",
+				retract: "Retract",
+			},
             errorMessage: {
                 printNoReady: "The printer is not ready, the Klippy host is trying to connect, please try again later!",
                 chuanganqi: "BLTouch failed to verify sensor status!",
@@ -4723,7 +5077,7 @@
         ta = Object(g["a"])({
             legacy: !1,
             globalInjection: !0,
-            locale: "en",
+            locale: "zh",
             messages: ea
         });
         var na = ta,
@@ -4856,7 +5210,7 @@
             errorHandler() {
                 this.webSocketState = !1,
                 this.reconnectWebSocket(),
-                console.log("检测到websocket服务处于出错的状态: 未连接,或者后台服务端口无效,或不存在")
+                console.log("The WebSocket service was detected to be in an error state: no connection, invalid backend service port, or does not exist.")
             }
             sendMsg(e) {
                 try {
@@ -4939,7 +5293,7 @@
     "67e1": function (e, t, n) {
         var a = n("24fb");
         t = a(!1),
-        t.push([e.i, ".comp-FilamentSetting[data-v-flt00001]{width:100%;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px;margin-bottom:0}.comp-FilamentSetting .fs-header[data-v-flt00001]{display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:#2d2d31;border-radius:5px 5px 0 0;cursor:pointer}.comp-FilamentSetting .fs-header .fs-title[data-v-flt00001]{font-size:13px;font-weight:700;color:#d2d2da}.comp-FilamentSetting .fs-header .fold .iconfont[data-v-flt00001]{color:#d2d2da;font-size:8px}.comp-FilamentSetting .fs-body[data-v-flt00001]{overflow:hidden;transition:height .25s ease}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 0;display:flex;flex-wrap:nowrap;overflow-x:auto}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 0;display:flex;justify-content:center;overflow-x:auto}.comp-FilamentSetting .filament-wrapper[data-v-flt00001]{display:flex;align-items:flex-start;gap:6px;width:max-content}.comp-FilamentSetting .mainbox[data-v-flt00001]{display:flex;flex-direction:column;align-items:centerpadding-top: 10px;background: #28282b;border-radius: 6px;border: 1px solid #414145;color: #8c9297;font-size: 12px;}.comp-FilamentSetting .box_container[data-v-flt00001]{display:flex;flex-direction:row;gap:4px}.comp-FilamentSetting .box[data-v-flt00001]{display:flex;flex-direction:column;align-items:center;width:72px}.comp-FilamentSetting .box .title[data-v-flt00001]{display:flex;align-items:center;justify-content:center;height:28px;font-size:15px;color:#cbcbcc}.comp-FilamentSetting .box .filament[data-v-flt00001]{display:flex;justify-content:center;align-items:center;height:64px}.comp-FilamentSetting .box-circle[data-v-flt00001]{fill:#cbcbcc;stroke:#cbcbcc}.comp-FilamentSetting .box .filament_type[data-v-flt00001]{font-size:15px;color:#cbcbcc;margin-top:3px;text-align:center;width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]{font-size:11px;color:#888;cursor:pointer;margin-top:2px}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]:hover{color:#1e9be2}.comp-FilamentSetting .box .current_flag[data-v-flt00001]{height:14px;display:flex;justify-content:center}.comp-FilamentSetting .btnbox[data-v-flt00001]{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding-top:28px}.comp-FilamentSetting .btnbox .btn[data-v-flt00001]{font-size:11px;color:#17cc5f;display:flex;align-items:center;gap:3px}.comp-FilamentSetting .filament-status[data-v-flt00001]{padding:6px 14px;font-size:11px;color:#cbcbcc;display:flex;align-items:center;gap:5px}.comp-FilamentSetting .filament-btn[data-v-flt00001]{display:flex;align-items:center;gap:8px;padding:6px 14px 10px}.comp-FilamentSetting .filament-btn .el-button[data-v-flt00001]{height:28px;font-size:12px;border-radius:14px;padding:0 14px}.comp-FilamentSetting .fs-spool-label[data-v-flt00001]{font-size:10px;color:#888;margin-top:2px;text-align:center}.comp-FilamentSetting .fs-box-label[data-v-flt00001]{font-size:15px;color:#1e9be2;margin-top:2px;font-weight:600;text-align:center;,.comp-FilamentSetting[data-v-flt00001] .box_container[data-v-flt00001]{justify-content:center;align-items:center}}", ""]),
+        t.push([e.i, ".comp-FilamentSetting[data-v-flt00001]{width:100%;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px;margin-bottom:0}.comp-FilamentSetting .fs-header[data-v-flt00001]{display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:40px;background:#2d2d31;border-radius:5px 5px 0 0;cursor:pointer}.comp-FilamentSetting .fs-header .fs-title[data-v-flt00001]{font-size:13px;font-weight:700;color:#d2d2da}.comp-FilamentSetting .fs-header .fold .iconfont[data-v-flt00001]{color:#d2d2da;font-size:8px}.comp-FilamentSetting .fs-body[data-v-flt00001]{overflow:hidden;transition:height .25s ease}.comp-FilamentSetting.controlAnimal .fs-body {height: 0 !important;}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 10px 10px;display:flex;flex-wrap:nowrap;overflow-x:auto}.comp-FilamentSetting .filament-container-wrapper[data-v-flt00001]{padding:10px 10px 10px 10px;display:flex;justify-content:center;overflow-x:auto}.comp-FilamentSetting .filament-wrapper[data-v-flt00001]{display:flex;align-items:flex-start;gap:6px;width:max-content}.comp-FilamentSetting .mainbox[data-v-flt00001]{display:flex;flex-direction:column;align-items:centerpadding-top: 10px;background: #28282b;border-radius: 6px;border: 1px solid #414145;color: #8c9297;font-size: 12px;}.comp-FilamentSetting .box_container[data-v-flt00001]{display:flex;flex-direction:row;gap:4px}.comp-FilamentSetting .box[data-v-flt00001]{display:flex;flex-direction:column;align-items:center;width:72px}.comp-FilamentSetting .box .title[data-v-flt00001]{display:flex;align-items:center;justify-content:center;height:28px;font-size:15px;color:#cbcbcc}.comp-FilamentSetting .box .filament[data-v-flt00001]{display:flex;justify-content:center;align-items:center;height:64px}.comp-FilamentSetting .box-circle[data-v-flt00001]{fill:#cbcbcc;stroke:#cbcbcc}.comp-FilamentSetting .box .filament_type[data-v-flt00001]{font-size:15px;color:#cbcbcc;margin-top:3px;text-align:center;width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]{font-size:11px;color:#888;cursor:pointer;margin-top:2px}.comp-FilamentSetting .box .filament_edit[data-v-flt00001]:hover{color:#1e9be2}.comp-FilamentSetting .box .current_flag[data-v-flt00001]{height:14px;display:flex;justify-content:center}.comp-FilamentSetting .btnbox[data-v-flt00001]{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding-top:28px}.comp-FilamentSetting .btnbox .btn[data-v-flt00001]{font-size:11px;color:#17cc5f;display:flex;align-items:center;gap:3px}.comp-FilamentSetting .filament-status[data-v-flt00001]{padding:6px 14px;font-size:11px;color:#cbcbcc;display:flex;align-items:center;gap:5px}.comp-FilamentSetting .filament-btn[data-v-flt00001]{display:flex;align-items:center;gap:8px;padding:6px 14px 10px}.comp-FilamentSetting .filament-btn .el-button[data-v-flt00001]{height:28px;font-size:12px;border-radius:14px;padding:0 14px}.comp-FilamentSetting .fs-spool-label[data-v-flt00001]{font-size:10px;color:#888;margin-top:2px;text-align:center}.comp-FilamentSetting .fs-box-label[data-v-flt00001]{font-size:15px;color:#1e9be2;margin-top:2px;font-weight:600;text-align:center;,.comp-FilamentSetting[data-v-flt00001] .box_container[data-v-flt00001]{justify-content:center;align-items:center}}", ""]),
         t.push([e.i, ".controlAnimal[data-v-d06bcaee]{height:40px!important}.control-main[data-v-d06bcaee]{width:100%;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px}.control-main .fold[data-v-d06bcaee]{cursor:pointer}.control-main .fold .iconfont[data-v-d06bcaee]{color:#d2d2da;font-size:8px}.control-main .head-show[data-v-d06bcaee]{width:81%}.control-main .head-show .left-feature[data-v-d06bcaee]{width:54px;padding:12px 15px;font-size:16px;font-weight:700;color:#fff}.control-main .head-show .left-feature span[data-v-d06bcaee]{padding-left:5px}.control-main .head-show .right-feature[data-v-d06bcaee]{padding:8px 15px;display:flex;justify-content:space-evenly}.control-main .head-show .right-feature .head_inner[data-v-d06bcaee]{padding:1% 0 0 1%;font-size:14px}.control-main .middleContent[data-v-d06bcaee]{width:100%;display:flex;justify-content:flex-start}.control-main .middleContent .active[data-v-d06bcaee]{background:#00a3ff}.control-main .middleContent .leftPrintshow[data-v-d06bcaee]{width:19%;padding:11px 0 0 20px}.control-main .middleContent .leftPrintshow .btn_container .el-button[data-v-d06bcaee]{width:97%;height:40px;box-shadow:0 3px 3px 0 rgba(31,31,35,.5);border-radius:5px}.control-main .middleContent .leftPrintshow .btn_container .el-button[data-v-d06bcaee]:first-child{margin-top:10px}.control-main .middleContent .rightPrintshow[data-v-d06bcaee]{width:96%;height:500px;background:#2d2d31;border-radius:5px;margin:20px;position:relative}.control-main .middleContent .rightPrintshow .flat-manual[data-v-d06bcaee]{display:flex;justify-content:center;align-items:center}.control-main .middleContent .rightPrintshow .flat-block[data-v-d06bcaee]{width:310px;height:310px;background:#2d2d31;border:1px solid #46464a;border-radius:5px}.control-main .middleContent .rightPrintshow .flat-block .row-btn[data-v-d06bcaee]{display:flex;justify-content:space-between}.control-main .middleContent .rightPrintshow .flat-block .el-button[data-v-d06bcaee]{width:103px;height:103px;border-radius:0;font-size:36px;color:#1e9be2;text-align:center;line-height:103px}.control-main .middleContent .rightPrintshow .content[data-v-d06bcaee]{width:100%;height:100%;position:relative}.control-main .middleContent .rightPrintshow .flat-auto[data-v-d06bcaee]{width:100%;height:100%}.control-main .middleContent .rightPrintshow .auto-menu[data-v-d06bcaee]{width:160px;position:absolute;right:2.5%;bottom:5%}.control-main .middleContent .rightPrintshow .auto-menu .el-checkbox[data-v-d06bcaee]{width:160px}.control-main .middleContent .rightPrintshow .auto-menu .el-checkbox[data-v-d06bcaee] .is-checked .el-checkbox__inner{background:#1e9be2}.control-main .middleContent .rightPrintshow .auto-menu .el-checkbox[data-v-d06bcaee] .el-checkbox__label{font-family:Source Han Sans CN;font-weight:500;color:#fff}.control-main .middleContent .rightPrintshow .auto-menu .el-button[data-v-d06bcaee]{width:160px}", ""]),
         e.exports = t
     },
@@ -4952,7 +5306,7 @@
     "781d": function (e, t, n) {
         var a = n("24fb");
         t = a(!1),
-        t.push([e.i, ".controlAnimal[data-v-e0becdc4]{height:40px!important}.control-main[data-v-e0becdc4]{width:100%;height:218px;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px}.control-main .fold[data-v-e0becdc4]{cursor:pointer}.control-main .fold .iconfont[data-v-e0becdc4]{color:#d2d2da;font-size:8px}@media screen and (max-width:1200px){.control-main .right-func .start-func[data-v-e0becdc4]{margin-right:1rem!important}.control-main .right-func .start-func button[data-v-e0becdc4]{width:3.4rem!important;height:24px;border-radius:12px;font-size:12px}.control-main .right-func .start-func button[data-v-e0becdc4]:first-child{margin-right:0!important}.control-main .right-func .start-func button .iconfont[data-v-e0becdc4]{margin-right:5px;font-size:12px;display:none}.control-main .right-func .continue-func[data-v-e0becdc4]{padding:0!important;border:none!important;margin-right:0!important}.control-main .right-func .continue-func .el-button+.el-button[data-v-e0becdc4]{margin-left:.3rem!important}.control-main .right-func .continue-func i[data-v-e0becdc4]{cursor:pointer;margin-right:.3rem!important}}.control-main .right-func[data-v-e0becdc4],.control-main .right-func .continue-func[data-v-e0becdc4]{display:flex;align-items:center;justify-content:center}.control-main .right-func .continue-func[data-v-e0becdc4]{padding:5px 10px;border-radius:10px;border:1px solid #4f4f54;margin-right:10px}.control-main .right-func .continue-func .el-button[data-v-e0becdc4]{border-radius:10px}.control-main .right-func .continue-func i[data-v-e0becdc4]{cursor:pointer;margin-right:10px}.control-main .right-func .start-func[data-v-e0becdc4]{display:flex;align-items:center;justify-content:center;margin-right:40px}.control-main .right-func .start-func button[data-v-e0becdc4]{width:100px;height:24px;border-radius:12px;font-size:12px}.control-main .right-func .start-func button[data-v-e0becdc4]:first-child{margin-right:10px}.control-main .right-func .start-func button .iconfont[data-v-e0becdc4]{margin-right:5px;font-size:12px}@media screen and (max-width:1200px){.control-main .containMain .middleContent[data-v-e0becdc4]{width:92%!important}}.control-main .containMain .middleContent[data-v-e0becdc4]{width:62%;height:155px;display:flex;justify-content:flex-start;align-items:center;padding:11px 0 0 20px}@media screen and (max-width:1200px){.control-main .containMain .middleContent .leftPrintshow[data-v-e0becdc4]{width:135px!important}.control-main .containMain .middleContent .leftPrintshow img[data-v-e0becdc4]{width:134px!important;margin-top:0!important}.control-main .containMain .middleContent .leftPrintshow #c[data-v-e0becdc4]{width:134px!important;left:calc(5% + 20px)!important}}.control-main .containMain .middleContent .leftPrintshow[data-v-e0becdc4]{width:230px;height:135px;background:#2b2b2f;border-radius:5px}.control-main .containMain .middleContent .leftPrintshow img[data-v-e0becdc4]{margin-top:1rem}.control-main .containMain .middleContent .leftPrintshow #c[data-v-e0becdc4]{opacity:.3;width:10.4%;height:135px;position:absolute;left:41px}@media screen and (max-width:1200px){.control-main .containMain .middleContent .rightPrintshow[data-v-e0becdc4]{padding:0 0 0 15px!important;width:100%!important;margin-top:80px!important}.control-main .containMain .middleContent .rightPrintshow .innerFlie[data-v-e0becdc4]{height:25px!important}.control-main .containMain .middleContent .rightPrintshow .innerFlie .span2[data-v-e0becdc4]{width:5rem!important}}.control-main .containMain .middleContent .rightPrintshow[data-v-e0becdc4]{width:400px;height:100px;text-align:left;padding:5px 0 0 20px}.control-main .containMain .middleContent .rightPrintshow .innerFlie[data-v-e0becdc4]{width:100%}.control-main .containMain .middleContent .rightPrintshow .innerFlie .span1[data-v-e0becdc4]{width:24px;height:10px;font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#7f7f80;display:inline-block;vertical-align:text-top}.control-main .containMain .middleContent .rightPrintshow .innerFlie .span2[data-v-e0becdc4]{width:8rem;display:inline-block;height:18px;font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#cbcbcc;vertical-align:text-bottom;padding:14px 0 0 20px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.control-main .containMain .middleContent .rightPrintshow .innerFlie .spe-span[data-v-e0becdc4]{text-align:left}.control-main .containMain .middleContent .rightPrintshow .innerFlie .progress[data-v-e0becdc4]  .el-progress-bar__outer{height:3px!important}.control-main .containMain .middleContent .rightPrintshow .innerFlie .progress[data-v-e0becdc4]  .el-progress__text{font-size:16px!important;font-family:Source Han Sans CN;font-weight:700;color:#fff;padding-left:5px}.control-main .containMain .line_right[data-v-e0becdc4]{width:1px;height:100px;background:#414145;position:absolute;top:10rem;left:33%}@media screen and (max-width:1200px){.control-main .containMain .footerContiner[data-v-e0becdc4]{width:49%!important;left:calc(5% + 158px)!important;top:8rem!important}.control-main .containMain .line_right[data-v-e0becdc4]{display:none}}.control-main .containMain .footerContiner[data-v-e0becdc4]{width:194px;text-align:left;position:absolute;left:35%;top:10rem}.control-main .containMain .footerContiner .innerConul li[data-v-e0becdc4]{display:flex;padding-top:14px}.control-main .containMain .footerContiner .innerConul li .rightInnerli[data-v-e0becdc4]{width:86%;display:flex;justify-content:space-between}.control-main .containMain .footerContiner .innerConul li .rightInnerli span[data-v-e0becdc4]:first-child{font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#7f7f80;display:inline-block}.control-main .containMain .footerContiner .innerConul li .rightInnerli span[data-v-e0becdc4]:nth-child(2){font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#cbcbcc;width:74px;text-align:left;display:inline-block}", ""]),
+        t.push([e.i, ".controlAnimal[data-v-e0becdc4]{height:40px!important}.control-main[data-v-e0becdc4]{width:100%;height:218px;background:#37373b;border:1px solid #0f0f10;box-shadow:0 6px 6px 0 rgba(36,36,39,.5);border-radius:5px}.control-main .fold[data-v-e0becdc4]{cursor:pointer}.control-main .fold .iconfont[data-v-e0becdc4]{color:#d2d2da;font-size:8px}@media screen and (max-width:1200px){.control-main .right-func .start-func[data-v-e0becdc4]{margin-right:1rem!important}.control-main .right-func .start-func button[data-v-e0becdc4]{width:3.4rem!important;height:24px;border-radius:12px;font-size:12px}.control-main .right-func .start-func button[data-v-e0becdc4]:first-child{margin-right:0!important}.control-main .right-func .start-func button .iconfont[data-v-e0becdc4]{margin-right:5px;font-size:12px;display:none}.control-main .right-func .continue-func[data-v-e0becdc4]{padding:0!important;border:none!important;margin-right:0!important}.control-main .right-func .continue-func .el-button+.el-button[data-v-e0becdc4]{margin-left:.3rem!important}.control-main .right-func .continue-func i[data-v-e0becdc4]{cursor:pointer;margin-right:.3rem!important}}.control-main .right-func[data-v-e0becdc4],.control-main .right-func .continue-func[data-v-e0becdc4]{display:flex;align-items:center;justify-content:center}.control-main .right-func .continue-func[data-v-e0becdc4]{padding:5px 10px;border-radius:10px;border:1px solid #4f4f54;margin-right:10px}.control-main .right-func .continue-func .el-button[data-v-e0becdc4]{border-radius:10px}.control-main .right-func .continue-func i[data-v-e0becdc4]{cursor:pointer;margin-right:10px}.control-main .right-func .start-func[data-v-e0becdc4]{display:flex;align-items:center;justify-content:center;margin-right:40px}.control-main .right-func .start-func button[data-v-e0becdc4]{width:100px;height:24px;border-radius:12px;font-size:12px}.control-main .right-func .start-func button[data-v-e0becdc4]:first-child{margin-right:10px}.control-main .right-func .start-func button .iconfont[data-v-e0becdc4]{margin-right:5px;font-size:12px}@media screen and (max-width:1200px){.control-main .containMain .middleContent[data-v-e0becdc4]{width:92%!important}}.control-main .containMain .middleContent[data-v-e0becdc4]{width:62%;height:155px;display:flex;justify-content:flex-start;align-items:center;padding:11px 0 0 20px}@media screen and (max-width:1200px){.control-main .containMain .middleContent .leftPrintshow[data-v-e0becdc4]{width:135px!important}.control-main .containMain .middleContent .leftPrintshow img[data-v-e0becdc4]{width:134px!important;margin-top:0!important}.control-main .containMain .middleContent .leftPrintshow #c[data-v-e0becdc4]{width:134px!important;left:calc(5% + 20px)!important}}.control-main .containMain .middleContent .leftPrintshow[data-v-e0becdc4]{width:230px;height:135px;background:#2b2b2f;border-radius:5px}.control-main .containMain .middleContent .leftPrintshow img[data-v-e0becdc4]{margin-top:1rem}.control-main .containMain .middleContent .leftPrintshow #c[data-v-e0becdc4]{opacity:.3;width:10.4%;height:135px;position:absolute;left:41px}@media screen and (max-width:1200px){.control-main .containMain .middleContent .rightPrintshow[data-v-e0becdc4]{padding:0 0 0 15px!important;width:100%!important;margin-top:80px!important}.control-main .containMain .middleContent .rightPrintshow .innerFlie[data-v-e0becdc4]{height:25px!important}.control-main .containMain .middleContent .rightPrintshow .innerFlie .span2[data-v-e0becdc4]{width:5rem!important}}.control-main .containMain .middleContent .rightPrintshow[data-v-e0becdc4]{width:400px;height:100px;text-align:left;padding:5px 0 0 20px}.control-main .containMain .middleContent .rightPrintshow .innerFlie[data-v-e0becdc4]{width:100%}.control-main .containMain .middleContent .rightPrintshow .innerFlie .span1[data-v-e0becdc4]{width:50px;height:10px;font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#7f7f80;display:inline-block;vertical-align:text-top}.control-main .containMain .middleContent .rightPrintshow .innerFlie .span2[data-v-e0becdc4]{width:8rem;display:inline-block;height:18px;font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#cbcbcc;vertical-align:text-bottom;padding:14px 0 0 20px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.control-main .containMain .middleContent .rightPrintshow .innerFlie .spe-span[data-v-e0becdc4]{text-align:left}.control-main .containMain .middleContent .rightPrintshow .innerFlie .progress[data-v-e0becdc4]  .el-progress-bar__outer{height:3px!important}.control-main .containMain .middleContent .rightPrintshow .innerFlie .progress[data-v-e0becdc4]  .el-progress__text{font-size:16px!important;font-family:Source Han Sans CN;font-weight:700;color:#fff;padding-left:5px}.control-main .containMain .line_right[data-v-e0becdc4]{width:1px;height:100px;background:#414145;position:absolute;top:10rem;left:33%}@media screen and (max-width:1200px){.control-main .containMain .footerContiner[data-v-e0becdc4]{width:49%!important;left:calc(5% + 158px)!important;top:8rem!important}.control-main .containMain .line_right[data-v-e0becdc4]{display:none}}.control-main .containMain .footerContiner[data-v-e0becdc4]{width:194px;text-align:left;position:absolute;left:35%;top:10rem}.control-main .containMain .footerContiner .innerConul li[data-v-e0becdc4]{display:flex;padding-top:14px}.control-main .containMain .footerContiner .innerConul li .rightInnerli[data-v-e0becdc4]{width:86%;display:flex;justify-content:space-between}.control-main .containMain .footerContiner .innerConul li .rightInnerli span[data-v-e0becdc4]:first-child{font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#7f7f80;display:inline-block}.control-main .containMain .footerContiner .innerConul li .rightInnerli span[data-v-e0becdc4]:nth-child(2){font-size:12px;font-family:Source Han Sans CN;font-weight:500;color:#cbcbcc;width:74px;text-align:left;display:inline-block}", ""]),
         e.exports = t
     },
     "7f80": function (e, t, n) {
