@@ -2365,7 +2365,7 @@
                 Object(a["watch"])(() => thumbnamil_ip, (ip) => {
 					if (!ip) return;
 
-					s.gcodePriview = `http://${ip}:8555/downloads/original/current_print_image.png?date=${Date.now()}`;
+					s.gcodePriview = `http://${ip}:80/downloads/original/current_print_image.png?date=${Date.now()}`;
 					l(s.gcodePriview);
 				}, { immediate: true });
                 const d = Object(a["ref"])(!1),
