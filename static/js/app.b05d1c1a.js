@@ -3559,8 +3559,10 @@
                     const {
                         proxy: e
                     } = Object(a["getCurrentInstance"])();
-                    t.value = `https://${e.$ip}:8080/?action=stream`,
-                    n.value = e.$ip,
+					const params = new URLSearchParams(window.location.search);
+			    	const getip = params.get("ip");
+                    t.value = `https://${getip}:8080/?action=stream`,
+                    n.value = getip,
                     o.value = await s(t.value)
                 }),
                 (e, s) => (Object(a["openBlock"])(), Object(a["createElementBlock"])("div", {
