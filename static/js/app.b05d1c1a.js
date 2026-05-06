@@ -5177,7 +5177,7 @@
 				const params = new URLSearchParams(window.location.search);
 				const ip = params.get("ip");
 
-				super(`ws://${ip}:9999`);
+				super(`wss://${ip}:9999`);
 
 				this.init();
 			}
@@ -5258,7 +5258,7 @@
         const ua = location.hostname;
         function ha() {
             pa && (pa.clear(), pa = null),
-            pa = new la(`ws://${ua}:9999`),
+            pa = new la(`wss://${ua}:9999`),
             pa.init()
         }
         ha(),
