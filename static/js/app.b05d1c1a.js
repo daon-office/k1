@@ -5179,7 +5179,7 @@
 				const params = new URLSearchParams(window.location.search);
 				const ip = params.get("ip");
 
-				super(`wss://${ip}:9999`);
+				super(`ws://${ip}:9999`);
 
 				this.init();
 			}
